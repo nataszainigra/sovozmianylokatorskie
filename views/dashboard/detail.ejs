@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="min-h-screen flex items-center justify-center">
+      <div class="bg-white p-8 rounded-lg shadow-lg">
+        <h1 class="text-2xl font-bold text-red-600 mb-4"><%= error %></h1>
+        <a href="/dashboard" class="text-blue-600 hover:text-blue-800">← Powrót do dashboardu</a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="min-h-screen pb-12">
+      <!-- Header -->
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div class="flex justify-between items-center">
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Wniosek <%= request.unitNumber %></h1>
+              <p class="text-sm text-gray-500 mt-1">ID: <%= request.id %></p>
+            </div>
+            <a href="/dashboard" class="text-blue-600 hover:text-blue-800">← Powrót do listy</a>
+          </div>
+        </div>
+      </header>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Success Message after sending quote -->
+        <% if (typeof sent !== 'undefined' && sent) { %>
+          <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6" role="alert">
+            <div class="flex items-center">
+              <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <strong class="font-bold">Kosztorys wysłany!</strong>
+              <span class="block sm:inline ml-2">Finalny kosztorys został wysłany do klienta na adres <%= request.email %></span>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Status Update -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-bold mb-4">Status wniosku</h2>
+          <form action="/dashboard/request/<%= request.id %>/status" method="POST" class="flex gap-4 items-end">
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Zmień status</label>
+              <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                <option value="nowy" <%= request.status === 'nowy' ? 'selected' : '' %>>Nowy</option>
+                <option value="w trakcie" <%= request.status === 'w trakcie' ? 'selected' : '' %>>W trakcie</option>
+                <option value="zaakceptowany" <%= request.status === 'zaakceptowany' ? 'selected' : '' %>>Zaakceptowany</option>
+                <option value="odrzucony" <%= request.status === 'odrzucony' ? 'selected' : '' %>>Odrzucony</option>
+              </select>
+            </div>
+            <div class="flex-1">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Notatki</label>
+              <input type="text" name="notes" value="<%= request.notes || '' %>"
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                     placeholder="Opcjonalne notatki...">
+            </div>
+            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Aktualizuj
+            </button>
+          </form>
+          <% if (request.updatedAt) { %>
+            <p class="text-sm text-gray-500 mt-4">Ostatnia aktualizacja: <%= new Date(request.updatedAt).toLocaleString('pl-PL') %></p>
+          <% } %>
+        </div>
+
+        <!-- Client Info -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <h2 class="text-xl font-bold mb-4">Informacje o kliencie</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-gray-600">Nabywca</p>
+              <p class="font-medium"><%= request.buyerName %></p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Numer lokalu</p>
+              <p class="font-medium"><%= request.unitNumber %></p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Email</p>
+              <p class="font-medium"><%= request.email %></p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Telefon</p>
+              <p class="font-medium"><%= request.phone || '-' %></p>
+            </div>
+            <% if (request.addressStreet || request.addressZip || request.addressCity) { %>
+              <div class="col-span-2">
+                <p class="text-sm text-gray-600">Adres korespondencyjny</p>
+                <p class="font-medium">
+                  <%= request.addressStreet || '' %><% if (request.addressZip || request.addressCity) { %>,<% } %>
+                  <%= request.addressZip || '' %> <%= request.addressCity || '' %>
+                </p>
+              </div>
+            <% } %>
+            <div>
+              <p class="text-sm text-gray-600">Data złożenia</p>
+              <p class="font-medium"><%= new Date(request.submittedAt).toLocaleString('pl-PL') %></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attachments -->
+        <% if (request.attachments && request.attachments.length > 0) { %>
+          <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Załączniki (<%= request.attachments.length %>)</h2>
+            <ul class="space-y-2">
+              <% request.attachments.forEach(file => { %>
+                <li class="flex items-center gap-2 text-sm">
+                  <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
+                  </svg>
+                  <a href="/uploads/<%= file %>" target="_blank" class="text-blue-600 hover:text-blue-800">
+                    <%= file %>
+                  </a>
+                </li>
+              <% }); %>
+            </ul>
+          </div>
+        <% } %>
+
+        <!-- Items List with Editing -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-bold">Pozycje wniosku</h2>
+            <button onclick="toggleEditMode()" id="editBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              Edytuj wycenę
+            </button>
+          </div>
+
+          <form id="itemsForm" action="/dashboard/request/<%= request.id %>/items" method="POST">
+            <input type="hidden" name="items" id="itemsInput" value="">
+
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                  <tr>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pomieszczenie</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Branża</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kod</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tytuł</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ilość</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jedn.</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cena jedn.</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Razem</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Analiza techniczna</th>
+                  </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200" id="itemsTableBody">
+                  <% estimate.rows.forEach((item, idx) => { %>
+                    <tr class="<%= item.manual ? 'bg-orange-50' : '' %>">
+                      <td class="px-4 py-3 text-sm"><%= item.room %></td>
+                      <td class="px-4 py-3 text-sm"><%= item.branch %></td>
+                      <td class="px-4 py-3 text-sm font-mono"><%= item.code || '-' %></td>
+                      <td class="px-4 py-3 text-sm"><%= item.title || item.description %></td>
+                      <td class="px-4 py-3 text-sm"><%= item.qty %></td>
+                      <td class="px-4 py-3 text-sm"><%= item.unit %></td>
+                      <td class="px-4 py-3 text-sm">
+                        <span class="view-mode"><%= item.unitPrice ? item.unitPrice.toFixed(2) + ' PLN' : '-' %></span>
+                        <input type="number" step="0.01"
+                               class="edit-mode hidden w-24 px-2 py-1 border border-gray-300 rounded"
+                               data-idx="<%= idx %>"
+                               data-field="unitPrice"
+                               value="<%= item.unitPrice || 0 %>">
+                      </td>
+                      <td class="px-4 py-3 text-sm font-medium">
+                        <% if (item.manual) { %>
+                          <span class="text-orange-600">Do analizy</span>
+                        <% } else { %>
+                          <%= item.lineTotal.toFixed(2) %> PLN
+                        <% } %>
+                      </td>
+                      <td class="px-4 py-3 text-sm">
+                        <% if (item.manual) { %>
+                          <span class="view-mode text-gray-500"><%= item.technicalAnalysis || 'Brak analizy' %></span>
+                          <textarea class="edit-mode hidden w-full px-2 py-1 border border-gray-300 rounded"
+                                    rows="2"
+                                    data-idx="<%= idx %>"
+                                    data-field="technicalAnalysis"
+                                    placeholder="Wpisz analizę techniczną..."><%= item.technicalAnalysis || '' %></textarea>
+                        <% } else { %>
+                          <span class="text-gray-400">-</span>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+              <div class="space-y-2 text-right">
+                <p class="text-lg">
+                  <span class="text-gray-600">Netto:</span>
+                  <span class="font-bold"><%= estimate.subtotal.toFixed(2) %> PLN</span>
+                </p>
+                <p class="text-lg">
+                  <span class="text-gray-600">VAT (23%):</span>
+                  <span class="font-bold"><%= estimate.vat.toFixed(2) %> PLN</span>
+                </p>
+                <p class="text-2xl border-t-2 pt-2">
+                  <span class="text-gray-600">Brutto:</span>
+                  <span class="font-bold text-blue-600"><%= estimate.total.toFixed(2) %> PLN</span>
+                </p>
+                <% if (estimate.manualCount > 0) { %>
+                  <p class="text-sm text-orange-600">
+                    Pozycji wymagających analizy: <%= estimate.manualCount %>
+                  </p>
+                <% } %>
+              </div>
+            </div>
+
+            <div class="mt-4 hidden" id="saveSection">
+              <button type="submit" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold">
+                Zapisz zmiany
+              </button>
+            </div>
+          </form>
+
+          <!-- Send Quote Section (shown after successful save) -->
+          <% if (typeof showSendButton !== 'undefined' && showSendButton && estimate.manualCount === 0) { %>
+            <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p class="text-sm text-green-800 mb-3">
+                ✓ Wycena zaktualizowana pomyślnie. Wszystkie pozycje zostały wycenione.
+              </p>
+              <button onclick="showSendConfirmation()" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold">
+                Zaakceptuj wycenę i Wyślij finalny Kosztorys do klienta
+              </button>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+              <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
+                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Potwierdź wysyłkę</h3>
+              <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500">
+                  Czy na pewno chcesz wysłać finalny kosztorys do klienta na adres:<br>
+                  <strong class="text-gray-900"><%= request.email %></strong>?
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                  Wartość brutto: <strong class="text-blue-600"><%= estimate.total.toFixed(2) %> PLN</strong>
+                </p>
+              </div>
+              <div class="items-center px-4 py-3">
+                <form action="/dashboard/request/<%= request.id %>/send-quote" method="POST" class="space-y-2">
+                  <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                    Potwierdź wysyłkę
+                  </button>
+                  <button type="button" onclick="hideSendConfirmation()" class="w-full px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    Anuluj
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let editMode = false;
+      const itemsData = <%- JSON.stringify(request.items) %>;
+
+      function showSendConfirmation() {
+        document.getElementById('confirmModal').classList.remove('hidden');
+      }
+
+      function hideSendConfirmation() {
+        document.getElementById('confirmModal').classList.add('hidden');
+      }
+
+      function toggleEditMode() {
+        editMode = !editMode;
+        const viewElements = document.querySelectorAll('.view-mode');
+        const editElements = document.querySelectorAll('.edit-mode');
+        const saveSection = document.getElementById('saveSection');
+        const editBtn = document.getElementById('editBtn');
+
+        if (editMode) {
+          viewElements.forEach(el => el.classList.add('hidden'));
+          editElements.forEach(el => el.classList.remove('hidden'));
+          saveSection.classList.remove('hidden');
+          editBtn.textContent = 'Anuluj';
+          editBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+          editBtn.classList.add('bg-gray-600', 'hover:bg-gray-700');
+        } else {
+          viewElements.forEach(el => el.classList.remove('hidden'));
+          editElements.forEach(el => el.classList.add('hidden'));
+          saveSection.classList.add('hidden');
+          editBtn.textContent = 'Edytuj wycenę';
+          editBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+          editBtn.classList.remove('bg-gray-600', 'hover:bg-gray-700');
+        }
+      }
+
+      document.getElementById('itemsForm').addEventListener('submit', function(e) {
+        const inputs = document.querySelectorAll('.edit-mode[data-field]');
+        const updatedItems = JSON.parse(JSON.stringify(itemsData));
+
+        inputs.forEach(input => {
+          const idx = parseInt(input.dataset.idx);
+          const field = input.dataset.field;
+
+          if (field === 'unitPrice') {
+            const value = parseFloat(input.value) || 0;
+            updatedItems[idx][field] = value;
+          } else if (field === 'technicalAnalysis') {
+            updatedItems[idx][field] = input.value;
+          }
+        });
+
+        document.getElementById('itemsInput').value = JSON.stringify(updatedItems);
+      });
+    </script>
+  <% } %>
+</body>
+</html>

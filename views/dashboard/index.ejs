@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  <div class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-bold text-gray-900">Dashboard - Wnioski o zmiany</h1>
+          <a href="/" class="text-blue-600 hover:text-blue-800">← Strona główna</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div class="bg-white rounded-lg shadow p-6">
+          <p class="text-sm text-gray-600">Wszystkie</p>
+          <p class="text-3xl font-bold text-gray-900"><%= stats.total %></p>
+        </div>
+        <div class="bg-blue-50 rounded-lg shadow p-6">
+          <p class="text-sm text-blue-600">Nowe</p>
+          <p class="text-3xl font-bold text-blue-900"><%= stats.nowy %></p>
+        </div>
+        <div class="bg-yellow-50 rounded-lg shadow p-6">
+          <p class="text-sm text-yellow-600">W trakcie</p>
+          <p class="text-3xl font-bold text-yellow-900"><%= stats.wTrakcie %></p>
+        </div>
+        <div class="bg-green-50 rounded-lg shadow p-6">
+          <p class="text-sm text-green-600">Zaakceptowane</p>
+          <p class="text-3xl font-bold text-green-900"><%= stats.zaakceptowany %></p>
+        </div>
+        <div class="bg-red-50 rounded-lg shadow p-6">
+          <p class="text-sm text-red-600">Odrzucone</p>
+          <p class="text-3xl font-bold text-red-900"><%= stats.odrzucony %></p>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="bg-white rounded-lg shadow p-4 mb-6">
+        <div class="flex gap-2">
+          <button onclick="filterStatus('all')" class="filter-btn px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 active" data-status="all">
+            Wszystkie
+          </button>
+          <button onclick="filterStatus('nowy')" class="filter-btn px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200" data-status="nowy">
+            Nowe
+          </button>
+          <button onclick="filterStatus('w trakcie')" class="filter-btn px-4 py-2 rounded-lg bg-yellow-100 hover:bg-yellow-200" data-status="w trakcie">
+            W trakcie
+          </button>
+          <button onclick="filterStatus('zaakceptowany')" class="filter-btn px-4 py-2 rounded-lg bg-green-100 hover:bg-green-200" data-status="zaakceptowany">
+            Zaakceptowane
+          </button>
+          <button onclick="filterStatus('odrzucony')" class="filter-btn px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200" data-status="odrzucony">
+            Odrzucone
+          </button>
+        </div>
+      </div>
+
+      <!-- Requests List -->
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numer lokalu</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nabywca</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data złożenia</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wycena</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pozycje do analizy</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if (requests.length === 0) { %>
+              <tr>
+                <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                  Brak wniosków w systemie
+                </td>
+              </tr>
+            <% } else { %>
+              <% requests.forEach(req => { %>
+                <tr class="request-row hover:bg-gray-50" data-status="<%= req.status %>">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <%= req.unitNumber %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <%= req.buyerName %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= req.email %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= new Date(req.submittedAt).toLocaleString('pl-PL') %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%
+                      let statusClass = 'bg-gray-100 text-gray-800';
+                      if (req.status === 'nowy') statusClass = 'bg-blue-100 text-blue-800';
+                      if (req.status === 'w trakcie') statusClass = 'bg-yellow-100 text-yellow-800';
+                      if (req.status === 'zaakceptowany') statusClass = 'bg-green-100 text-green-800';
+                      if (req.status === 'odrzucony') statusClass = 'bg-red-100 text-red-800';
+                    %>
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= statusClass %>">
+                      <%= req.status %>
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <% if (req.estimatedCost) { %>
+                      <%= req.estimatedCost.total.toFixed(2) %> PLN
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                    <% if (req.estimatedCost && req.estimatedCost.manualCount > 0) { %>
+                      <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-semibold">
+                        <%= req.estimatedCost.manualCount %>
+                      </span>
+                    <% } else { %>
+                      -
+                    <% } %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <a href="/dashboard/request/<%= req.id %>" class="text-blue-600 hover:text-blue-900">
+                      Szczegóły →
+                    </a>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function filterStatus(status) {
+      const rows = document.querySelectorAll('.request-row');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('active', 'font-bold');
+        if (btn.dataset.status === status) {
+          btn.classList.add('active', 'font-bold');
+        }
+      });
+
+      rows.forEach(row => {
+        if (status === 'all' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

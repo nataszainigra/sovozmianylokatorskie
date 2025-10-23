@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+<div class="max-w-3xl space-y-4">
+  <h1 class="text-2xl font-semibold">Procedura wprowadzenia zmian lokatorskich</h1>
+  <p class="text-zinc-600">Złóż wniosek, dołącz rysunki, a my przygotujemy analizę i wstępną wycenę na podstawie cennika.</p>
+  <div class="flex gap-3">
+    <a href="/wniosek" class="px-4 py-2 rounded-md bg-zinc-900 text-white">Nowy wniosek</a>
+    <a href="/cennik" class="px-4 py-2 rounded-md border">Zobacz cennik</a>
+    <a href="/dashboard" class="px-4 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50">Dashboard (Dział Techniczny)</a>
+  </div>
+
+  <div class="mt-8 p-4 border rounded-md bg-zinc-50">
+    <h2 class="font-medium mb-2">Wskazówki do rysunków</h2>
+    <ul class="list-disc pl-5 text-sm text-zinc-700 space-y-1">
+      <li>Usunięcie elementu – <span class="font-medium">czerwony</span></li>
+      <li>Dodanie elementu – <span class="font-medium">zielony</span></li>
+      <li>Przesunięcie / zmiana lokalizacji – <span class="font-medium">niebieski</span></li>
+      <li>Podaj odległości od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
+    </ul>
+  </div>
+</div>
+<%- include('partials/footer') %>
