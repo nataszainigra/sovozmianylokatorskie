@@ -196,10 +196,54 @@ netstat -ano | findstr :3000
 taskkill /PID <PID> /F
 ```
 
+## 🚀 Wdrożenie na Vercel
+
+### Automatyczne wdrożenie z GitHub
+
+1. **Zaloguj się do [Vercel](https://vercel.com)**
+2. Kliknij **"Add New Project"**
+3. Zaimportuj swoje repozytorium z GitHub
+4. **Skonfiguruj zmienne środowiskowe:**
+   - Przejdź do **Settings** → **Environment Variables**
+   - Dodaj:
+     - `SUPABASE_URL` → twój URL z Supabase
+     - `SUPABASE_ANON_KEY` → twój anon key z Supabase
+5. Kliknij **"Deploy"**
+
+### Ręczne wdrożenie (CLI)
+
+```bash
+# Zainstaluj Vercel CLI
+npm i -g vercel
+
+# Zaloguj się
+vercel login
+
+# Zbuduj projekt
+npm run build
+
+# Deploy
+vercel --prod
+```
+
+Podczas pierwszego deploya Vercel zapyta o zmienne środowiskowe - wklej swoje klucze Supabase.
+
+### ⚠️ Ważne uwagi dla Vercel:
+
+**Przechowywanie plików (uploads/):**
+- Vercel ma **read-only filesystem** - pliki uploadowane przez użytkowników NIE będą zachowane między deploymentami
+- **Rozwiązania:**
+  1. **Supabase Storage** (zalecane) - przechowuj pliki bezpośrednio w Supabase
+  2. **Vercel Blob Storage** - płatna usługa Vercel
+  3. **AWS S3, Cloudinary** - zewnętrzne storage
+
+Zobacz dokumentację Supabase Storage: https://supabase.com/docs/guides/storage
+
 ## 📚 Dokumentacja
 
 - **SUPABASE_MIGRATION.md** - Szczegółowa instrukcja migracji i konfiguracji Supabase
 - **CLAUDE.md** - Dokumentacja dla AI (struktura projektu, zasady developmentu)
+- **vercel.json** - Konfiguracja Vercel deployment
 
 ## 🔄 Historia wersji
 

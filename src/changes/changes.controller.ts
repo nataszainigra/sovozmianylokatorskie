@@ -1,16 +1,18 @@
-import { Body, Controller, Get, Param, Post, Render, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Render, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { ChangesService } from './changes.service';
 import { RequestsService } from './requests.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { memoryStorage } from 'multer';
 import { getPriceListForBranch } from './price-list';
+import { SupabaseService } from '../supabase/supabase.service';
+import { Response } from 'express';
 
 @Controller()
 export class ChangesController {
   constructor(
     private readonly svc: ChangesService,
     private readonly requestsSvc: RequestsService,
+    private readonly supabase: SupabaseService,
   ) {}
 
   @Get('/')
@@ -42,28 +44,74 @@ export class ChangesController {
   @UseInterceptors(FileFieldsInterceptor(
     [{ name: 'attachments', maxCount: 10 }],
     {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (_req, file, cb) => {
-          const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-          cb(null, unique + extname(file.originalname));
-        },
-      }),
+      storage: memoryStorage(),
       limits: { fileSize: 15 * 1024 * 1024 },
     }
   ))
   @Render('podsumowanie')
   async submit(@Body() body: any, @UploadedFiles() files: { attachments?: Express.Multer.File[] }) {
     const request = this.svc.toRequest(body);
-    const saved = (files?.attachments || []).map(f => f.filename);
-    request.attachments = saved;
+    const client = this.supabase.getClient();
 
+    // Upload files to Supabase Storage
+    const uploadedFiles: string[] = [];
+    const uploadErrors: string[] = [];
+
+    if (files?.attachments) {
+      for (const file of files.attachments) {
+        try {
+          const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}-${file.originalname}`;
+          const filePath = fileName;
+
+          const { error: uploadError } = await client.storage
+            .from('request-attachments')
+            .upload(filePath, file.buffer, {
+              contentType: file.mimetype,
+              upsert: false,
+            });
+
+          if (uploadError) {
+            console.error('Upload error:', uploadError);
+            uploadErrors.push(file.originalname);
+          } else {
+            uploadedFiles.push(filePath);
+          }
+        } catch (err) {
+          console.error('Upload exception:', err);
+          uploadErrors.push(file.originalname);
+        }
+      }
+    }
+
+    request.attachments = uploadedFiles;
     const estimate = this.svc.estimate(request.items);
 
-    // Save to JSON storage
+    // Save to Supabase database
     await this.requestsSvc.saveRequest(request, estimate);
 
-    return { title: 'Podsumowanie wniosku', request, estimate, saved };
+    return {
+      title: 'Podsumowanie wniosku',
+      request,
+      estimate,
+      saved: uploadedFiles,
+      uploadErrors: uploadErrors.length > 0 ? uploadErrors : undefined
+    };
+  }
+
+  @Get('/uploads/:filename')
+  async getFile(@Param('filename') filename: string, @Res() res: Response) {
+    const client = this.supabase.getClient();
+
+    const { data, error } = await client.storage
+      .from('request-attachments')
+      .download(filename);
+
+    if (error || !data) {
+      return res.status(404).send('File not found');
+    }
+
+    res.setHeader('Content-Type', data.type);
+    res.send(Buffer.from(await data.arrayBuffer()));
   }
 
   @Get('/cennik')
