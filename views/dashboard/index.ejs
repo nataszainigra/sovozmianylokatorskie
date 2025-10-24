@@ -4,134 +4,500 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f9fafb;
+    }
+
+    .sovo-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s;
+    }
+
+    .sovo-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .sovo-btn-primary {
+      background: #7A0C2E;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sovo-btn-primary:hover {
+      background: #5A0821;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(122, 12, 46, 0.2);
+    }
+
+    .sovo-btn-secondary {
+      background: white;
+      color: #7A0C2E;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 2px solid #7A0C2E;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sovo-btn-secondary:hover {
+      background: #fef2f2;
+      transform: translateY(-1px);
+    }
+
+    .sovo-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .sovo-input:focus {
+      outline: none;
+      border-color: #7A0C2E;
+      box-shadow: 0 0 0 3px rgba(122, 12, 46, 0.1);
+    }
+
+    .sovo-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .sovo-table thead {
+      background: #f9fafb;
+    }
+
+    .sovo-table th {
+      padding: 1rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6b7280;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .sovo-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+    }
+
+    .sovo-table tbody tr {
+      transition: background-color 0.2s;
+    }
+
+    .sovo-table tbody tr:hover {
+      background: #fef2f2;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .stat-card.burgundy { border-left: 4px solid #7A0C2E; }
+    .stat-card.blue { border-left: 4px solid #3b82f6; }
+    .stat-card.yellow { border-left: 4px solid #f59e0b; }
+    .stat-card.green { border-left: 4px solid #10b981; }
+    .stat-card.red { border-left: 4px solid #ef4444; }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn.active {
+      border-color: #7A0C2E;
+      background: #fef2f2;
+      color: #7A0C2E;
+      font-weight: 600;
+    }
+
+    .filter-btn:not(.active):hover {
+      background: #f3f4f6;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-badge.nowy { background: #dbeafe; color: #1e40af; }
+    .status-badge.w-trakcie { background: #fef3c7; color: #92400e; }
+    .status-badge.zaakceptowany { background: #d1fae5; color: #065f46; }
+    .status-badge.odrzucony { background: #fee2e2; color: #991b1b; }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      background: #f9fafb;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sovo-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .sovo-table thead {
+        display: none;
+      }
+
+      .sovo-table,
+      .sovo-table tbody,
+      .sovo-table tr {
+        display: block;
+        width: 100%;
+      }
+
+      .sovo-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem;
+        background: white;
+      }
+
+      .sovo-table td {
+        display: block;
+        padding: 0.5rem 0;
+        border: none;
+        text-align: left !important;
+      }
+
+      .sovo-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.25rem;
+        color: #6b7280;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      .sovo-table td:last-child {
+        padding-top: 1rem;
+        margin-top: 0.5rem;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .stat-card {
+        margin-bottom: 0.75rem;
+      }
+
+      .filter-btn {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
+<body>
   <div class="min-h-screen">
     <!-- Header -->
-    <header class="bg-white shadow">
+    <header class="bg-white shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-bold text-gray-900">Dashboard - Wnioski o zmiany</h1>
-          <a href="/" class="text-blue-600 hover:text-blue-800">← Strona główna</a>
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div class="flex items-center gap-4">
+            <img src="/sovo_logo.png" alt="SOVO Development" class="h-10 sm:h-12">
+            <div>
+              <h1 class="text-2xl sm:text-3xl font-bold" style="color: #7A0C2E;">Dashboard - Wnioski o zmiany</h1>
+              <p class="text-sm text-gray-600 mt-1">Panel Działu Technicznego</p>
+            </div>
+          </div>
+          <a href="/" class="text-sm font-medium" style="color: #7A0C2E; hover: #5A0821;">← Strona główna</a>
         </div>
       </div>
     </header>
 
+    <!-- Send Request to Client Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div class="sovo-card mb-6 sm:mb-8">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center" style="background: #fef2f2;">
+            <svg class="w-5 h-5" style="color: #7A0C2E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-gray-900">Wyślij wniosek do klienta</h2>
+            <p class="text-sm text-gray-600">Zainicjuj proces zmian lokatorskich</p>
+          </div>
+        </div>
+
+        <form id="sendRequestForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Imię i nazwisko <span class="text-red-600">*</span>
+            </label>
+            <input type="text" name="buyerName" required class="sovo-input" placeholder="Jan Kowalski">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Email <span class="text-red-600">*</span>
+            </label>
+            <input type="email" name="email" required class="sovo-input" placeholder="jan.kowalski@example.com">
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Numer lokalu <span class="text-red-600">*</span>
+            </label>
+            <input type="text" name="unitNumber" required class="sovo-input" placeholder="np. A12, 3B">
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Karta lokalu (PDF) <span class="text-red-600">*</span>
+            </label>
+            <p class="text-xs text-gray-500 mb-3">Pliki będą dostępne dla klienta do pobrania</p>
+
+            <!-- Hidden real input -->
+            <input type="file" id="kartaInput" name="kartaLokalu" accept=".pdf" class="hidden">
+
+            <div class="flex items-center gap-2">
+              <button type="button" id="addKartaBtn" class="sovo-btn-secondary">
+                + Dodaj plik PDF
+              </button>
+              <div id="kartaError" class="text-sm text-red-600"></div>
+            </div>
+
+            <ul id="kartaList" class="mt-3 space-y-2"></ul>
+
+            <!-- Temporary picker -->
+            <input type="file" id="kartaPicker" accept=".pdf" multiple class="hidden">
+          </div>
+
+          <div class="md:col-span-2">
+            <button type="submit" class="sovo-btn-primary">
+              Wyślij wniosek do klienta
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Confirmation Modal -->
+      <div id="confirmModal" class="hidden modal-overlay">
+        <div class="modal-content">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Potwierdź wysyłkę wniosku</h3>
+
+          <div class="mb-6 space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="font-semibold text-gray-700">Imię i nazwisko:</span>
+              <span id="confirmName" class="text-gray-900"></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold text-gray-700">Email:</span>
+              <span id="confirmEmail" class="text-gray-900"></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-semibold text-gray-700">Numer lokalu:</span>
+              <span id="confirmUnit" class="text-gray-900"></span>
+            </div>
+            <div>
+              <p class="font-semibold text-gray-700 mb-2">Karty lokalu:</p>
+              <ul id="confirmFiles" class="list-disc pl-5 text-gray-700 space-y-1"></ul>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 mb-6 p-4 bg-gray-50 rounded-lg">
+            Czy na pewno chcesz wysłać zaproszenie do wypełnienia wniosku na podany adres email?
+          </p>
+
+          <div class="flex gap-3">
+            <button onclick="cancelSend()" class="sovo-btn-secondary flex-1">
+              Anuluj
+            </button>
+            <button onclick="confirmSend()" class="sovo-btn-primary flex-1">
+              Potwierdź wysyłkę
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Stats -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-        <div class="bg-white rounded-lg shadow p-6">
-          <p class="text-sm text-gray-600">Wszystkie</p>
-          <p class="text-3xl font-bold text-gray-900"><%= stats.total %></p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6 sm:mb-8">
+        <div class="stat-card burgundy">
+          <p class="text-xs font-semibold uppercase tracking-wide" style="color: #7A0C2E;">Wszystkie</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= stats.total %></p>
         </div>
-        <div class="bg-blue-50 rounded-lg shadow p-6">
-          <p class="text-sm text-blue-600">Nowe</p>
-          <p class="text-3xl font-bold text-blue-900"><%= stats.nowy %></p>
+        <div class="stat-card blue">
+          <p class="text-xs font-semibold uppercase tracking-wide text-blue-600">Nowe</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= stats.nowy %></p>
         </div>
-        <div class="bg-yellow-50 rounded-lg shadow p-6">
-          <p class="text-sm text-yellow-600">W trakcie</p>
-          <p class="text-3xl font-bold text-yellow-900"><%= stats.wTrakcie %></p>
+        <div class="stat-card yellow">
+          <p class="text-xs font-semibold uppercase tracking-wide text-yellow-600">W trakcie</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= stats.wTrakcie %></p>
         </div>
-        <div class="bg-green-50 rounded-lg shadow p-6">
-          <p class="text-sm text-green-600">Zaakceptowane</p>
-          <p class="text-3xl font-bold text-green-900"><%= stats.zaakceptowany %></p>
+        <div class="stat-card green">
+          <p class="text-xs font-semibold uppercase tracking-wide text-green-600">Zaakceptowane</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= stats.zaakceptowany %></p>
         </div>
-        <div class="bg-red-50 rounded-lg shadow p-6">
-          <p class="text-sm text-red-600">Odrzucone</p>
-          <p class="text-3xl font-bold text-red-900"><%= stats.odrzucony %></p>
+        <div class="stat-card red">
+          <p class="text-xs font-semibold uppercase tracking-wide text-red-600">Odrzucone</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2"><%= stats.odrzucony %></p>
         </div>
       </div>
 
       <!-- Filters -->
-      <div class="bg-white rounded-lg shadow p-4 mb-6">
-        <div class="flex gap-2">
-          <button onclick="filterStatus('all')" class="filter-btn px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 active" data-status="all">
+      <div class="sovo-card mb-6">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="filterStatus('all')" class="filter-btn active" data-status="all">
             Wszystkie
           </button>
-          <button onclick="filterStatus('nowy')" class="filter-btn px-4 py-2 rounded-lg bg-blue-100 hover:bg-blue-200" data-status="nowy">
+          <button onclick="filterStatus('nowy')" class="filter-btn" data-status="nowy">
             Nowe
           </button>
-          <button onclick="filterStatus('w trakcie')" class="filter-btn px-4 py-2 rounded-lg bg-yellow-100 hover:bg-yellow-200" data-status="w trakcie">
+          <button onclick="filterStatus('w trakcie')" class="filter-btn" data-status="w trakcie">
             W trakcie
           </button>
-          <button onclick="filterStatus('zaakceptowany')" class="filter-btn px-4 py-2 rounded-lg bg-green-100 hover:bg-green-200" data-status="zaakceptowany">
+          <button onclick="filterStatus('zaakceptowany')" class="filter-btn" data-status="zaakceptowany">
             Zaakceptowane
           </button>
-          <button onclick="filterStatus('odrzucony')" class="filter-btn px-4 py-2 rounded-lg bg-red-100 hover:bg-red-200" data-status="odrzucony">
+          <button onclick="filterStatus('odrzucony')" class="filter-btn" data-status="odrzucony">
             Odrzucone
           </button>
         </div>
       </div>
 
       <!-- Requests List -->
-      <div class="bg-white rounded-lg shadow overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+      <div class="sovo-card overflow-hidden">
+        <table class="sovo-table">
+          <thead>
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Numer lokalu</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nabywca</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data złożenia</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wycena</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pozycje do analizy</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Akcje</th>
+              <th>Numer lokalu</th>
+              <th>Nabywca</th>
+              <th>Email</th>
+              <th>Data złożenia</th>
+              <th>Status</th>
+              <th>Wycena</th>
+              <th>Do analizy</th>
+              <th>Akcje</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
+          <tbody>
             <% if (requests.length === 0) { %>
               <tr>
-                <td colspan="8" class="px-6 py-12 text-center text-gray-500">
-                  Brak wniosków w systemie
+                <td colspan="8" class="text-center py-12 text-gray-500">
+                  <div class="flex flex-col items-center gap-3">
+                    <svg class="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <p class="font-medium">Brak wniosków w systemie</p>
+                  </div>
                 </td>
               </tr>
             <% } else { %>
               <% requests.forEach(req => { %>
-                <tr class="request-row hover:bg-gray-50" data-status="<%= req.status %>">
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    <%= req.unitNumber %>
+                <tr class="request-row" data-status="<%= req.status %>">
+                  <td data-label="Numer lokalu">
+                    <span class="font-semibold"><%= req.unitNumber %></span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td data-label="Nabywca">
                     <%= req.buyerName %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= req.email %>
+                  <td data-label="Email">
+                    <span class="text-sm"><%= req.email %></span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <%= new Date(req.submittedAt).toLocaleString('pl-PL') %>
+                  <td data-label="Data złożenia">
+                    <span class="text-sm"><%= new Date(req.submittedAt).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
+                  <td data-label="Status">
                     <%
-                      let statusClass = 'bg-gray-100 text-gray-800';
-                      if (req.status === 'nowy') statusClass = 'bg-blue-100 text-blue-800';
-                      if (req.status === 'w trakcie') statusClass = 'bg-yellow-100 text-yellow-800';
-                      if (req.status === 'zaakceptowany') statusClass = 'bg-green-100 text-green-800';
-                      if (req.status === 'odrzucony') statusClass = 'bg-red-100 text-red-800';
+                      let statusClass = 'nowy';
+                      if (req.status === 'w trakcie') statusClass = 'w-trakcie';
+                      if (req.status === 'zaakceptowany') statusClass = 'zaakceptowany';
+                      if (req.status === 'odrzucony') statusClass = 'odrzucony';
                     %>
-                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= statusClass %>">
+                    <span class="status-badge <%= statusClass %>">
                       <%= req.status %>
                     </span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td data-label="Wycena">
                     <% if (req.estimatedCost) { %>
-                      <%= req.estimatedCost.total.toFixed(2) %> PLN
+                      <span class="font-semibold"><%= req.estimatedCost.total.toFixed(2) %> PLN</span>
                     <% } else { %>
-                      -
+                      <span class="text-gray-400">-</span>
                     <% } %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-center">
+                  <td data-label="Do analizy">
                     <% if (req.estimatedCost && req.estimatedCost.manualCount > 0) { %>
-                      <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded-full text-xs font-semibold">
+                      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-orange-100 text-orange-800 font-bold text-sm">
                         <%= req.estimatedCost.manualCount %>
                       </span>
                     <% } else { %>
-                      -
+                      <span class="text-gray-400">-</span>
                     <% } %>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <a href="/dashboard/request/<%= req.id %>" class="text-blue-600 hover:text-blue-900">
-                      Szczegóły →
+                  <td data-label="Akcje">
+                    <a href="/dashboard/request/<%= req.id %>" class="inline-flex items-center gap-1 font-semibold text-sm" style="color: #7A0C2E;">
+                      Szczegóły
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                      </svg>
                     </a>
                   </td>
                 </tr>
@@ -141,17 +507,166 @@
         </table>
       </div>
     </div>
+
+    <div class="h-12"></div>
   </div>
 
   <script>
+    // File manager for Karta Lokalu
+    let kartaFiles = [];
+    const kartaInput = document.getElementById('kartaInput');
+    const kartaPicker = document.getElementById('kartaPicker');
+    const addKartaBtn = document.getElementById('addKartaBtn');
+    const kartaList = document.getElementById('kartaList');
+    const kartaError = document.getElementById('kartaError');
+
+    function renderKartaFiles() {
+      kartaList.innerHTML = '';
+      if (kartaFiles.length === 0) {
+        kartaList.innerHTML = '<li class="text-sm text-gray-500 italic">Brak plików - kliknij "Dodaj plik PDF" aby wybrać</li>';
+        return;
+      }
+
+      kartaFiles.forEach((file, idx) => {
+        const li = document.createElement('li');
+        li.className = 'file-item';
+        li.innerHTML = `
+          <div class="flex-1">
+            <div class="font-medium text-sm text-gray-900">${file.name}</div>
+            <div class="text-xs text-gray-500 mt-1">${(file.size / 1024 / 1024).toFixed(2)} MB</div>
+          </div>
+          <button type="button" class="text-red-600 text-sm hover:text-red-800 font-semibold px-3 py-1 rounded hover:bg-red-50" onclick="removeKartaFile(${idx})">Usuń</button>
+        `;
+        kartaList.appendChild(li);
+      });
+    }
+
+    function syncKartaInput() {
+      const dt = new DataTransfer();
+      kartaFiles.forEach(f => dt.items.add(f));
+      kartaInput.files = dt.files;
+    }
+
+    function removeKartaFile(idx) {
+      kartaFiles.splice(idx, 1);
+      syncKartaInput();
+      renderKartaFiles();
+    }
+
+    addKartaBtn.addEventListener('click', () => {
+      kartaPicker.value = '';
+      kartaPicker.click();
+    });
+
+    kartaPicker.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+
+      kartaError.textContent = '';
+
+      // Validate files
+      for (const file of files) {
+        if (file.size > 15 * 1024 * 1024) {
+          kartaError.textContent = `Plik ${file.name} przekracza 15MB`;
+          return;
+        }
+        if (!file.type.includes('pdf')) {
+          kartaError.textContent = `Dozwolone są tylko pliki PDF`;
+          return;
+        }
+      }
+
+      // Remove duplicates
+      const existingKeys = new Set(kartaFiles.map(f => `${f.name.toLowerCase()}::${f.size}`));
+      const toAdd = files.filter(f => !existingKeys.has(`${f.name.toLowerCase()}::${f.size}`));
+
+      kartaFiles = kartaFiles.concat(toAdd);
+      syncKartaInput();
+      renderKartaFiles();
+    });
+
+    // Send Request to Client functionality
+    let formData = null;
+
+    document.getElementById('sendRequestForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Validate at least one file
+      if (kartaFiles.length === 0) {
+        kartaError.textContent = 'Musisz dodać przynajmniej jeden plik karty lokalu';
+        return;
+      }
+
+      const form = e.target;
+      formData = new FormData(form);
+
+      // Populate confirmation modal
+      document.getElementById('confirmName').textContent = formData.get('buyerName');
+      document.getElementById('confirmEmail').textContent = formData.get('email');
+      document.getElementById('confirmUnit').textContent = formData.get('unitNumber');
+
+      const confirmFiles = document.getElementById('confirmFiles');
+      confirmFiles.innerHTML = '';
+      kartaFiles.forEach(file => {
+        const li = document.createElement('li');
+        li.textContent = file.name;
+        confirmFiles.appendChild(li);
+      });
+
+      // Show modal
+      document.getElementById('confirmModal').classList.remove('hidden');
+    });
+
+    function cancelSend() {
+      document.getElementById('confirmModal').classList.add('hidden');
+      formData = null;
+    }
+
+    async function confirmSend() {
+      if (!formData) return;
+
+      try {
+        const response = await fetch('/dashboard/send-request-to-client', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert('✅ Wniosek został wysłany do klienta!\n\nEmail z linkiem został wysłany na adres:\n' + formData.get('email'));
+
+          // Reset form and close modal
+          document.getElementById('sendRequestForm').reset();
+          kartaFiles = [];
+          syncKartaInput();
+          renderKartaFiles();
+          document.getElementById('confirmModal').classList.add('hidden');
+          formData = null;
+
+          // Reload page to show new stats
+          window.location.reload();
+        } else {
+          alert('❌ Błąd: ' + (result.message || 'Nie udało się wysłać wniosku'));
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Wystąpił błąd podczas wysyłania wniosku');
+      }
+    }
+
+    // Initialize
+    renderKartaFiles();
+
+    // Filter functionality
     function filterStatus(status) {
       const rows = document.querySelectorAll('.request-row');
       const buttons = document.querySelectorAll('.filter-btn');
 
       buttons.forEach(btn => {
-        btn.classList.remove('active', 'font-bold');
+        btn.classList.remove('active');
         if (btn.dataset.status === status) {
-          btn.classList.add('active', 'font-bold');
+          btn.classList.add('active');
         }
       });
 
