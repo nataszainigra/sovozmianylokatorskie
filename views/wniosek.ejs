@@ -1,181 +1,395 @@
 <%- include('partials/header') %>
-<form action="/wniosek/podsumowanie" method="post" enctype="multipart/form-data" class="space-y-6">
-  <h1 class="text-2xl font-semibold">Wniosek o wprowadzenie zmian lokatorskich</h1>
+<style>
+  /* SOVO CRM Styles */
+  .sovo-input {
+    width: 100%;
+    padding: 0.65rem 0.875rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s;
+  }
+  .sovo-input:focus {
+    outline: none;
+    border-color: #7A0C2E;
+    box-shadow: 0 0 0 3px rgba(122, 12, 46, 0.1);
+  }
+  .sovo-input::placeholder {
+    color: #9ca3af;
+  }
+  .sovo-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+  .sovo-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+  }
+  .sovo-btn-primary {
+    background: #7A0C2E;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  .sovo-btn-primary:hover {
+    background: #5A0821;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(122, 12, 46, 0.2);
+  }
+  .sovo-btn-secondary {
+    background: white;
+    color: #7A0C2E;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 2px solid #7A0C2E;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .sovo-btn-secondary:hover {
+    background: #FFF5F7;
+  }
+  .sovo-btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .sovo-btn-small:hover {
+    border-color: #7A0C2E;
+    color: #7A0C2E;
+  }
+  .sovo-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+  }
+  .sovo-table {
+    width: 100%;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+  }
+  .sovo-table thead {
+    background: #f9fafb;
+    border-bottom: 2px solid #e5e7eb;
+  }
+  .sovo-table th {
+    padding: 0.75rem 0.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+  .sovo-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+  }
+  .sovo-table input, .sovo-table select, .sovo-table textarea {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+  .sovo-table input:focus, .sovo-table select:focus, .sovo-table textarea:focus {
+    outline: none;
+    border-color: #7A0C2E;
+  }
+  .sovo-badge-success {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #d1fae5;
+    color: #065f46;
+  }
+  .sovo-badge-warning {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .sovo-info-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1rem;
+  }
 
-  <div class="grid sm:grid-cols-2 gap-4">
-    <div>
-      <label class="block text-sm font-medium">Imię i nazwisko Kupującego</label>
-      <input name="buyerName" required class="mt-1 w-full rounded-md border px-3 py-2" />
+  /* Mobile responsive styles */
+  @media (max-width: 768px) {
+    .sovo-card {
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .sovo-section-title {
+      font-size: 1.125rem;
+    }
+    /* Hide table on mobile, use card layout */
+    .sovo-table thead {
+      display: none;
+    }
+    .sovo-table, .sovo-table tbody, .sovo-table tr {
+      display: block;
+      width: 100%;
+    }
+    .sovo-table tr {
+      margin-bottom: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.75rem;
+      background: white;
+    }
+    .sovo-table td {
+      display: block;
+      padding: 0.5rem 0;
+      border: none;
+    }
+    .sovo-table td:before {
+      content: attr(data-label);
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #6b7280;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .mobile-hidden {
+      display: none;
+    }
+  }
+</style>
+
+<div class="max-w-5xl mx-auto">
+  <form action="/wniosek/podsumowanie" method="post" enctype="multipart/form-data" class="space-y-6">
+
+    <!-- HEADER -->
+    <div class="sovo-card">
+      <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">Wniosek o wprowadzenie zmian lokatorskich</h1>
+      <p class="text-gray-600 text-sm md:text-base">Wypełnij formularz, dołącz rysunki z zaznaczonymi zmianami, a my przygotujemy analizę i wycenę.</p>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium">Numer lokalu</label>
-      <input name="unitNumber" required class="mt-1 w-full rounded-md border px-3 py-2" placeholder="np. A12, 3B, 104" />
-    </div>
+    <!-- DANE OSOBOWE -->
+    <div class="sovo-card">
+      <h2 class="sovo-section-title">Dane kontaktowe</h2>
 
-    <!-- KARTA LOKALU (powiązana z numerem lokalu) -->
-    <div class="sm:col-span-2">
-      <div class="flex items-center gap-2">
-        <label class="block text-sm font-medium">Karta lokalu</label>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="sovo-label">Imię i nazwisko Kupującego <span class="text-red-600">*</span></label>
+          <input name="buyerName" required class="sovo-input" placeholder="Jan Kowalski" />
+        </div>
 
-        <!-- Dymek z zasadami -->
-        <button type="button" id="rulesInfoBtn" class="shrink-0 w-5 h-5 rounded-full border text-xs leading-4 flex items-center justify-center"
-                aria-label="Zasady nanoszenia zmian" title="Zasady nanoszenia zmian">i</button>
+        <div>
+          <label class="sovo-label">Numer lokalu <span class="text-red-600">*</span></label>
+          <input name="unitNumber" required class="sovo-input" placeholder="np. A12, 3B, 104" />
+        </div>
       </div>
 
-      <!-- placeholder / info -->
-      <input id="kartaInfo" readonly class="mt-1 w-full rounded-md border px-3 py-2 text-zinc-600 bg-zinc-50"
-             value="Po uzupełnieniu numeru lokalu pojawi się karta lokalu do pobrania i podglądu. Na karcie należy nanoszyć zmiany zgodnie z zasadami." />
+      <!-- KARTA LOKALU -->
+      <div class="mt-4">
+        <div class="flex items-center gap-2 mb-2">
+          <label class="sovo-label mb-0">Karta lokalu</label>
+          <button type="button" id="rulesInfoBtn"
+                  class="w-5 h-5 rounded-full border border-gray-400 text-xs flex items-center justify-center text-gray-600 hover:bg-gray-100"
+                  aria-label="Zasady nanoszenia zmian" title="Zasady nanoszenia zmian">i</button>
+        </div>
 
-      <!-- akcje -->
-      <div class="mt-2 flex flex-wrap items-center gap-2">
-        <a id="kartaDownload" class="px-3 py-1.5 rounded-md border pointer-events-none opacity-50" target="_blank" rel="noopener">Pobierz PDF</a>
-        <button type="button" id="kartaPreviewBtn" class="px-3 py-1.5 rounded-md border pointer-events-none opacity-50">Podgląd</button>
-        <span id="kartaFilename" class="text-xs text-zinc-500"></span>
+        <input id="kartaInfo" readonly class="sovo-input bg-gray-50 text-gray-600 cursor-not-allowed"
+               value="Po uzupełnieniu numeru lokalu pojawi się karta lokalu do pobrania i podglądu. Na karcie należy nanoszyć zmiany zgodnie z zasadami." />
+
+        <div class="mt-2 flex flex-wrap items-center gap-2">
+          <a id="kartaDownload" class="sovo-btn-small pointer-events-none opacity-50" target="_blank" rel="noopener">Pobierz PDF</a>
+          <button type="button" id="kartaPreviewBtn" class="sovo-btn-small pointer-events-none opacity-50">Podgląd</button>
+          <span id="kartaFilename" class="text-xs text-gray-500"></span>
+        </div>
+
+        <div id="kartaPreview" class="mt-3 hidden">
+          <object id="kartaObject" data="" type="application/pdf" class="w-full h-96 border rounded-lg">
+            <div class="p-3 text-sm">
+              Nie udało się wczytać podglądu. <a id="kartaFallback" class="underline text-sovo-burgundy" target="_blank" rel="noopener">Otwórz w nowej karcie</a>.
+            </div>
+          </object>
+        </div>
+
+        <!-- Tooltip z zasadami -->
+        <div id="rulesTooltip" class="hidden mt-2 sovo-info-box">
+          <div class="font-semibold mb-2 text-gray-800">Zasady nanoszenia zmian</div>
+          <ul class="list-disc pl-5 space-y-1 text-sm text-gray-700">
+            <li>Dołączenie rysunków jest obowiązkowe — bez nich wniosek nie zostanie rozpatrzony.</li>
+            <li>Oznaczenia na kartach technicznych lokalu:
+              <ul class="list-disc pl-5 mt-1">
+                <li>Usunięcie elementu — <span class="font-semibold text-red-600">kolor czerwony</span></li>
+                <li>Dodanie elementu — <span class="font-semibold text-green-600">kolor zielony</span></li>
+                <li>Przesunięcie / zmiana lokalizacji — <span class="font-semibold text-blue-600">kolor niebieski</span></li>
+              </ul>
+            </li>
+            <li>Zmiany instalacyjne (wod-kan, elektryczne, teletechniczne) muszą mieć podane odległości:
+              od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
+          </ul>
+        </div>
       </div>
 
-      <!-- podgląd PDF (toggle) -->
-      <div id="kartaPreview" class="mt-3 hidden">
-        <object id="kartaObject" data="" type="application/pdf" class="w-full h-96 border rounded-md">
-          <div class="p-3 text-sm">
-            Nie udało się wczytać podglądu. <a id="kartaFallback" class="underline" target="_blank" rel="noopener">Otwórz w nowej karcie</a>.
+      <!-- ADRES KORESPONDENCYJNY -->
+      <div class="mt-4">
+        <label class="sovo-label">Adres korespondencyjny</label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <input name="addressStreet" class="sovo-input" placeholder="Ulica i nr" />
           </div>
-        </object>
+          <div>
+            <input name="addressZip" class="sovo-input" placeholder="00-000" />
+          </div>
+          <div>
+            <input name="addressCity" class="sovo-input" placeholder="Miejscowość" />
+          </div>
+        </div>
       </div>
 
-      <!-- tooltip / dymek z zasadami -->
-      <div id="rulesTooltip" class="hidden mt-2 text-sm border rounded-md p-3 bg-white shadow-sm">
-        <div class="font-medium mb-1">Zasady nanoszenia zmian</div>
-        <ul class="list-disc pl-5 space-y-1">
-          <li>Dołączenie rysunków jest obowiązkowe — bez nich wniosek nie zostanie rozpatrzony.</li>
-          <li>Oznaczenia na kartach technicznych lokalu:
-            <ul class="list-disc pl-5 mt-1">
-              <li>Usunięcie elementu — <span class="font-medium text-red-600">kolor czerwony</span></li>
-              <li>Dodanie elementu — <span class="font-medium text-green-600">kolor zielony</span></li>
-              <li>Przesunięcie / zmiana lokalizacji — <span class="font-medium text-blue-600">kolor niebieski</span></li>
-            </ul>
-          </li>
-          <li>Zmiany instalacyjne (wod-kan, elektryczne, teletechniczne) muszą mieć podane odległości:
-            od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Adres korespondencyjny (3 pola) -->
-    <div class="sm:col-span-2 grid sm:grid-cols-3 gap-4">
-      <div>
-        <label class="block text-sm font-medium">Ulica i nr</label>
-        <input name="addressStreet" class="mt-1 w-full rounded-md border px-3 py-2" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium">Kod pocztowy</label>
-        <input name="addressZip" class="mt-1 w-full rounded-md border px-3 py-2" placeholder="00-000" />
-      </div>
-      <div>
-        <label class="block text-sm font-medium">Miejscowość</label>
-        <input name="addressCity" class="mt-1 w-full rounded-md border px-3 py-2" />
+      <!-- EMAIL I TELEFON -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="sovo-label">Adres e-mail <span class="text-red-600">*</span></label>
+          <input name="email" type="email" required class="sovo-input" placeholder="jan.kowalski@example.com" />
+        </div>
+        <div>
+          <label class="sovo-label">Telefon</label>
+          <input name="phone" class="sovo-input" placeholder="+48 123 456 789" />
+        </div>
       </div>
     </div>
 
-    <div>
-      <label class="block text-sm font-medium">Adres e-mail</label>
-      <input name="email" type="email" required class="mt-1 w-full rounded-md border px-3 py-2" />
-    </div>
-    <div>
-      <label class="block text-sm font-medium">Telefon</label>
-      <input name="phone" class="mt-1 w-full rounded-md border px-3 py-2" />
-    </div>
-  </div>
+    <!-- ZMIANY W LOKALU -->
+    <div class="sovo-card">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-4">
+        <h2 class="sovo-section-title mb-0">Zmiany w lokalu</h2>
+        <button type="button" id="addRow" class="sovo-btn-secondary">+ Dodaj pozycję</button>
+      </div>
 
-  <div class="p-4 border rounded-md">
-    <div class="flex items-center justify-between gap-2">
-      <h2 class="font-medium">Zmiany w lokalu</h2>
-      <button type="button" id="addRow" class="px-3 py-1.5 rounded-md border">Dodaj pozycję</button>
-    </div>
+      <div class="overflow-x-auto -mx-4 md:mx-0">
+        <div class="min-w-full inline-block align-middle px-4 md:px-0">
+          <table class="sovo-table">
+            <thead>
+              <tr>
+                <th>Pomieszczenie</th>
+                <th>Branża</th>
+                <th style="width: 30%">Opis / Kod cennika</th>
+                <th style="width: 80px">Jedn.</th>
+                <th style="width: 100px">Ilość</th>
+                <th style="width: 120px">Status</th>
+                <th style="width: 130px">Cena (netto)</th>
+                <th style="width: 60px"></th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
 
-    <table class="w-full mt-3 text-sm">
-      <thead class="text-left text-zinc-600">
-        <tr>
-          <th class="py-2 pr-2">Pomieszczenie</th>
-          <th class="py-2 pr-2">Branża</th>
-          <th class="py-2 pr-2 w-[30%]">Opis / Kod cennika</th>
-          <th class="py-2 pr-2 w-20">Jedn.</th>
-          <th class="py-2 pr-2 w-24">Ilość</th>
-          <th class="py-2 pr-2 w-28">Status</th>
-          <th class="py-2 pr-2 w-32">Cena (netto)</th>
-          <th class="py-2 pr-2 w-16"></th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-
-    <input type="hidden" name="items" id="itemsJson" />
-  </div>
-
-  <!-- ORIENTACYJNA WYCENA przeniesiona POD tabelę -->
-  <div class="p-4 border rounded-md bg-zinc-50">
-    <div class="font-medium text-lg">Orientacyjna wycena</div>
-    <div class="text-xs text-zinc-600">Kalkulacja wstępna na podstawie aktualnego cennika. Elementy bez automatycznej wyceny oznaczamy jako „Do analizy Działu Technicznego”. Finalny kosztorys wyślemy e-mailem po analizie.</div>
-    <div id="estBox" class="mt-3 space-y-1 text-sm">
-      <div class="flex justify-between"><span>Suma netto</span><span id="sumNetto">0,00 zł</span></div>
-      <div class="flex justify-between"><span>VAT 23%</span><span id="sumVat">0,00 zł</span></div>
-      <div class="flex justify-between font-semibold"><span>Suma brutto</span><span id="sumBrutto">0,00 zł</span></div>
-      <div class="text-xs text-amber-600 mt-2" id="manualInfo" style="display:none;"></div>
-    </div>
-  </div>
-
-  <!-- MENEDŻER ZAŁĄCZNIKÓW -->
-  <div class="p-4 border rounded-md bg-zinc-50">
-    <label class="block text-sm font-medium mb-2">
-      Załącz rysunki / pliki (PDF/JPG/PNG) – max 10 plików, 15MB każdy
-      <span class="text-red-600">*</span>
-    </label>
-    <p class="text-xs text-zinc-600 mb-3">
-      <strong>Obowiązkowe:</strong> Karta lokalu z zaznaczonymi zmianami zgodnie z zasadami składania wniosku
-    </p>
-
-    <!-- Ukryty natywny input, który faktycznie zostanie wysłany (zasilany DataTransferem) -->
-    <input id="attachmentsInput" type="file" name="attachments" multiple accept=".pdf,.jpg,.jpeg,.png" class="hidden" />
-
-    <div class="flex items-center gap-2">
-      <button type="button" id="pickFiles" class="px-3 py-1.5 rounded-md border">Dodaj plik</button>
-      <div id="attachError" class="text-sm text-red-600"></div>
+      <input type="hidden" name="items" id="itemsJson" />
     </div>
 
-    <ul id="filesList" class="mt-3 space-y-2 text-sm"></ul>
+    <!-- ORIENTACYJNA WYCENA -->
+    <div class="sovo-card bg-gray-50 border border-gray-200">
+      <h2 class="sovo-section-title">Orientacyjna wycena</h2>
+      <p class="text-xs text-gray-600 mb-4">Kalkulacja wstępna na podstawie aktualnego cennika. Elementy bez automatycznej wyceny oznaczamy jako „Do analizy Działu Technicznego". Finalny kosztorys wyślemy e-mailem po analizie.</p>
 
-    <!-- Tymczasowy picker tylko do wyboru nowych plików -->
-    <input id="pickerHidden" type="file" multiple accept=".pdf,.jpg,.jpeg,.png" class="hidden" />
-  </div>
+      <div id="estBox" class="space-y-2">
+        <div class="flex justify-between text-gray-700">
+          <span>Suma netto</span>
+          <span id="sumNetto" class="font-semibold">0,00 zł</span>
+        </div>
+        <div class="flex justify-between text-gray-700">
+          <span>VAT 23%</span>
+          <span id="sumVat" class="font-semibold">0,00 zł</span>
+        </div>
+        <div class="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-300">
+          <span>Suma brutto</span>
+          <span id="sumBrutto">0,00 zł</span>
+        </div>
+        <div class="text-xs text-amber-700 mt-2" id="manualInfo" style="display:none;"></div>
+      </div>
+    </div>
 
-  <!-- ZASADY SKŁADANIA WNIOSKU (ogólne) -->
-  <section class="p-4 border rounded-md bg-white">
-    <h2 class="font-medium mb-2">Zasady składania wniosku</h2>
-    <ul class="list-disc pl-5 space-y-1 text-sm">
-      <li>Wszystkie zmiany muszą być precyzyjnie opisane.</li>
-      <li>Dołączenie rysunków jest obowiązkowe — bez nich wniosek nie zostanie rozpatrzony.</li>
-      <li>
-        Wszelkie zmiany powinny być oznaczone na kartach technicznych lokalu zgodnie z zasadami:
-        <ul class="list-disc pl-5 mt-1">
-          <li>Usunięcie elementu — <span class="font-medium text-red-600">kolor czerwony</span>,</li>
-          <li>Dodanie elementu — <span class="font-medium text-green-600">kolor zielony</span>,</li>
-          <li>Przesunięcie lub zmiana lokalizacji — <span class="font-medium text-blue-600">kolor niebieski</span>.</li>
-        </ul>
-      </li>
-      <li>W przypadku zmian instalacyjnych (wodno-kanalizacyjnych, elektrycznych, teletechnicznych) należy podać dokładne odległości: od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
-    </ul>
-  </section>
+    <!-- ZAŁĄCZNIKI -->
+    <div class="sovo-card bg-gray-50 border border-gray-200">
+      <label class="sovo-label">
+        Załącz rysunki / pliki (PDF/JPG/PNG)
+        <span class="text-red-600">*</span>
+      </label>
+      <p class="text-xs text-gray-600 mb-3">
+        <strong>Obowiązkowe:</strong> Karta lokalu z zaznaczonymi zmianami zgodnie z zasadami składania wniosku. Max 10 plików, 15MB każdy.
+      </p>
 
-  <fieldset class="space-y-2 text-sm">
-    <label class="flex gap-2 items-start"><input type="checkbox" required class="mt-1" /> <span>Oświadczam, że zapoznałem/am się z regulaminem wprowadzania zmian lokatorskich oraz cennikami i akceptuję ich treść.</span></label>
-    <label class="flex gap-2 items-start"><input type="checkbox" required class="mt-1" /> <span>Przyjmuję do wiadomości, że przedstawiona powyżej kalkulacja ma charakter wstępny, a finalny kosztorys zostanie przesłany po analizie przez Dział Techniczny.</span></label>
-  </fieldset>
+      <input id="attachmentsInput" type="file" name="attachments" multiple accept=".pdf,.jpg,.jpeg,.png" class="hidden" />
 
-  <div class="flex items-center justify-end gap-3">
-    <a href="/" class="px-4 py-2 rounded-md border">Anuluj</a>
-    <button class="px-4 py-2 rounded-md bg-zinc-900 text-white">Wyślij wniosek</button>
-  </div>
-</form>
+      <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+        <button type="button" id="pickFiles" class="sovo-btn-small">+ Dodaj plik</button>
+        <div id="attachError" class="text-sm text-red-600"></div>
+      </div>
+
+      <ul id="filesList" class="mt-3 space-y-2"></ul>
+      <input id="pickerHidden" type="file" multiple accept=".pdf,.jpg,.jpeg,.png" class="hidden" />
+    </div>
+
+    <!-- ZASADY -->
+    <div class="sovo-card">
+      <h2 class="sovo-section-title">Zasady składania wniosku</h2>
+      <ul class="list-disc pl-5 space-y-2 text-sm text-gray-700">
+        <li>Wszystkie zmiany muszą być precyzyjnie opisane.</li>
+        <li>Dołączenie rysunków jest obowiązkowe — bez nich wniosek nie zostanie rozpatrzony.</li>
+        <li>
+          Wszelkie zmiany powinny być oznaczone na kartach technicznych lokalu zgodnie z zasadami:
+          <ul class="list-disc pl-5 mt-1">
+            <li>Usunięcie elementu — <span class="font-semibold text-red-600">kolor czerwony</span></li>
+            <li>Dodanie elementu — <span class="font-semibold text-green-600">kolor zielony</span></li>
+            <li>Przesunięcie lub zmiana lokalizacji — <span class="font-semibold text-blue-600">kolor niebieski</span></li>
+          </ul>
+        </li>
+        <li>W przypadku zmian instalacyjnych (wodno-kanalizacyjnych, elektrycznych, teletechnicznych) należy podać dokładne odległości: od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
+      </ul>
+    </div>
+
+    <!-- ZGODY -->
+    <div class="sovo-card">
+      <div class="space-y-3">
+        <label class="flex gap-3 items-start cursor-pointer">
+          <input type="checkbox" required class="mt-1 w-4 h-4 text-sovo-burgundy border-gray-300 rounded" />
+          <span class="text-sm text-gray-700">Oświadczam, że zapoznałem/am się z regulaminem wprowadzania zmian lokatorskich oraz cennikami i akceptuję ich treść.</span>
+        </label>
+        <label class="flex gap-3 items-start cursor-pointer">
+          <input type="checkbox" required class="mt-1 w-4 h-4 text-sovo-burgundy border-gray-300 rounded" />
+          <span class="text-sm text-gray-700">Przyjmuję do wiadomości, że przedstawiona powyżej kalkulacja ma charakter wstępny, a finalny kosztorys zostanie przesłany po analizie przez Dział Techniczny.</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- PRZYCISKI -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3">
+      <a href="/" class="sovo-btn-secondary text-center">Anuluj</a>
+      <button type="submit" class="sovo-btn-primary text-center">Wyślij wniosek</button>
+    </div>
+  </form>
+</div>
 
 <script>
   const form = document.querySelector('form');
@@ -191,7 +405,6 @@
   const kartaFilename = document.getElementById('kartaFilename');
 
   function makeCardUrl(unit) {
-    // Dostosuj, jeśli masz inną ścieżkę
     const cleaned = String(unit).trim();
     return '/karty/' + encodeURIComponent(cleaned) + '.pdf';
   }
@@ -226,21 +439,19 @@
   });
 
   kartaPreviewBtn.addEventListener('click', () => {
-    // pokaż/ukryj podgląd
     const href = kartaDownload.getAttribute('href');
     if (!href) return;
     kartaObject.setAttribute('data', href);
     kartaPreview.classList.toggle('hidden');
   });
 
-  // Dymek / zasady (toggle)
   const rulesInfoBtn = document.getElementById('rulesInfoBtn');
   const rulesTooltip = document.getElementById('rulesTooltip');
   rulesInfoBtn.addEventListener('click', () => {
     rulesTooltip.classList.toggle('hidden');
   });
 
-  // ====== ELEMENTY FORMULARZA (tabela)
+  // ====== TABELA ZMIAN
   const rows = document.getElementById('rows');
   const add = document.getElementById('addRow');
   const itemsField = document.getElementById('itemsJson');
@@ -255,7 +466,6 @@
   const state = [];
   function sync() { itemsField.value = JSON.stringify(state); estimate(); }
 
-  // Cache cennika dla branż
   const priceListCache = {};
 
   async function loadPriceListForBranch(branch) {
@@ -280,7 +490,7 @@
       const opt = document.createElement('option');
       opt.value = code;
       opt.textContent = `${code} - ${item.title} (${item.unit}, ${item.price.toFixed(2)} zł)`;
-      opt.dataset.unit = item.unit; // Store unit in data attribute
+      opt.dataset.unit = item.unit;
       if (code === currentCode) opt.selected = true;
       selectEl.appendChild(opt);
     });
@@ -297,42 +507,41 @@
     state.push({ room: data.room||'Kuchnia', branch: data.branch||'Architektura', code: data.code||'', description: data.description||'', unit: data.unit||'', qty: Math.max(1, Math.floor(data.qty||1)) });
 
     const tr = document.createElement('tr');
-    tr.className = 'border-t align-top';
     tr.innerHTML = `
-      <td class="py-2 pr-2">
-        <select class="border rounded-md px-2 py-1" data-k="room">${roomOpts.map(o=>`<option ${o===state[idx].room?'selected':''}>${o}</option>`).join('')}</select>
+      <td data-label="Pomieszczenie">
+        <select class="w-full" data-k="room">${roomOpts.map(o=>`<option ${o===state[idx].room?'selected':''}>${o}</option>`).join('')}</select>
       </td>
 
-      <td class="py-2 pr-2">
-        <select class="border rounded-md px-2 py-1" data-k="branch">${branchOpts.map(o=>`<option ${o===state[idx].branch?'selected':''}>${o}</option>`).join('')}</select>
+      <td data-label="Branża">
+        <select class="w-full" data-k="branch">${branchOpts.map(o=>`<option ${o===state[idx].branch?'selected':''}>${o}</option>`).join('')}</select>
       </td>
 
-      <td class="py-2 pr-2 w-[30%]">
-        <select class="border rounded-md px-2 py-1 w-full" data-k="priceSelect">
+      <td data-label="Opis / Kod cennika">
+        <select class="w-full" data-k="priceSelect">
           <option value="">Ładowanie...</option>
         </select>
-        <textarea placeholder="Wpisz opis zmiany..." rows="2" class="border rounded-md px-2 py-1 w-full resize-y mt-1 hidden" data-k="customDesc"></textarea>
+        <textarea placeholder="Wpisz opis zmiany..." rows="2" class="w-full resize-y mt-1 hidden" data-k="customDesc"></textarea>
       </td>
 
-      <td class="py-2 pr-2 w-20">
-        <input class="border rounded-md px-2 py-1 w-full" data-k="unit" value="${state[idx].unit}"/>
+      <td data-label="Jedn.">
+        <input class="w-full" data-k="unit" value="${state[idx].unit}"/>
       </td>
 
-      <td class="py-2 pr-2 w-24">
-        <input type="number" min="1" step="1" inputmode="numeric" pattern="\\d*" class="border rounded-md px-2 py-1 w-full" data-k="qty" value="${state[idx].qty}"/>
+      <td data-label="Ilość">
+        <input type="number" min="1" step="1" inputmode="numeric" pattern="\\d*" class="w-full" data-k="qty" value="${state[idx].qty}"/>
       </td>
 
-      <td class="py-2 pr-2 w-28">
-        <span class="inline-block text-xs rounded px-2 py-1 bg-zinc-100 text-zinc-600" data-k="status">—</span>
+      <td data-label="Status">
+        <span class="inline-block text-xs rounded-full px-2 py-1 bg-gray-100 text-gray-600" data-k="status">—</span>
       </td>
 
-      <td class="py-2 pr-2 w-32">
-        <div class="text-right font-medium" data-k="price">—</div>
-        <div class="text-right text-[11px] text-zinc-500" data-k="total" style="display:none;">= 0,00 zł</div>
+      <td data-label="Cena (netto)">
+        <div class="text-right font-semibold" data-k="price">—</div>
+        <div class="text-right text-xs text-gray-500" data-k="total" style="display:none;">= 0,00 zł</div>
       </td>
 
-      <td class="py-2 pr-2 text-right w-16">
-        <button type="button" class="text-red-600" data-action="del">Usuń</button>
+      <td data-label="">
+        <button type="button" class="text-red-600 font-medium text-sm hover:text-red-800" data-action="del">Usuń</button>
       </td>`;
 
     tr.addEventListener('input', (e) => {
@@ -341,7 +550,6 @@
       if (k === 'room') s.room = v;
       else if (k === 'branch') {
         s.branch = v;
-        // Reload price list for new branch
         const priceSelect = tr.querySelector('[data-k="priceSelect"]');
         populatePriceSelect(priceSelect, v, s.code);
       }
@@ -350,24 +558,19 @@
         const unitInput = tr.querySelector('[data-k="unit"]');
 
         if (v === 'INNE') {
-          // Show custom description field
           customDesc.classList.remove('hidden');
           s.code = '';
           s.description = customDesc.value;
           s.unit = unitInput.value || '';
         } else if (v) {
-          // Selected from price list
           customDesc.classList.add('hidden');
           s.code = v;
           s.description = '';
-
-          // Auto-fill unit from price list
           const selectedOption = el.options[el.selectedIndex];
           const unit = selectedOption.dataset.unit || '';
           s.unit = unit;
           unitInput.value = unit;
         } else {
-          // Nothing selected
           customDesc.classList.add('hidden');
           s.code = '';
           s.description = '';
@@ -398,11 +601,9 @@
 
     rows.appendChild(tr);
 
-    // Initialize price list dropdown
     const priceSelect = tr.querySelector('[data-k="priceSelect"]');
     populatePriceSelect(priceSelect, state[idx].branch, state[idx].code);
 
-    // Show custom description if code is empty and description exists
     if (!state[idx].code && state[idx].description) {
       const customDesc = tr.querySelector('[data-k="customDesc"]');
       customDesc.classList.remove('hidden');
@@ -433,8 +634,14 @@
       (data.rows || []).forEach((r, i) => {
         const s = statuses[i];
         if (s) {
-          if (r.manual) { s.textContent = 'Do analizy'; s.className='inline-block text-xs rounded px-2 py-1 bg-amber-100 text-amber-700'; }
-          else { s.textContent = 'Wycenione'; s.className='inline-block text-xs rounded px-2 py-1 bg-emerald-100 text-emerald-700'; }
+          if (r.manual) {
+            s.textContent = 'Do analizy';
+            s.className='sovo-badge-warning';
+          }
+          else {
+            s.textContent = 'Wycenione';
+            s.className='sovo-badge-success';
+          }
         }
 
         const p = prices[i];
@@ -460,7 +667,7 @@
     } catch(e) { console.error(e); }
   }
 
-  // ====== MENEDŻER ZAŁĄCZNIKÓW (frontend)
+  // ====== ZAŁĄCZNIKI
   const attachmentsInput = document.getElementById('attachmentsInput');
   const pickFilesBtn = document.getElementById('pickFiles');
   const pickerHidden = document.getElementById('pickerHidden');
@@ -468,24 +675,24 @@
   const attachError = document.getElementById('attachError');
 
   const ATTACH_MAX_FILES = 10;
-  const ATTACH_MAX_SIZE = 15 * 1024 * 1024; // 15MB
-  let attachments = []; // tablica File
+  const ATTACH_MAX_SIZE = 15 * 1024 * 1024;
+  let attachments = [];
 
   function renderFiles() {
     filesList.innerHTML = '';
     if (attachments.length === 0) {
-      filesList.innerHTML = '<li class="text-zinc-500">Brak załączników</li>';
+      filesList.innerHTML = '<li class="text-gray-500 text-sm">Brak załączników</li>';
       return;
     }
     attachments.forEach((f, i) => {
       const li = document.createElement('li');
-      li.className = 'flex items-center justify-between gap-3 border rounded-md bg-white px-3 py-2';
+      li.className = 'flex items-center justify-between gap-3 border border-gray-200 rounded-lg bg-white px-3 py-2';
       li.innerHTML = `
-        <div class="truncate">
-          <div class="font-medium truncate">${f.name}</div>
-          <div class="text-xs text-zinc-500">${(f.size/1024/1024).toFixed(2)} MB</div>
+        <div class="truncate flex-1">
+          <div class="font-medium truncate text-sm">${f.name}</div>
+          <div class="text-xs text-gray-500">${(f.size/1024/1024).toFixed(2)} MB</div>
         </div>
-        <button type="button" class="text-red-600" data-remove="${i}">Usuń</button>
+        <button type="button" class="text-red-600 font-medium text-sm hover:text-red-800" data-remove="${i}">Usuń</button>
       `;
       li.querySelector('[data-remove]').addEventListener('click', () => {
         attachments.splice(i, 1);
@@ -535,7 +742,6 @@
     if (!files.length) return;
     if (!canAddFiles(files)) return;
 
-    // odfiltruj proste duplikaty (nazwa+rozmiar)
     const existingKeys = new Set(attachments.map(f => `${f.name.toLowerCase()}::${f.size}`));
     const toAdd = files.filter(f => !existingKeys.has(`${f.name.toLowerCase()}::${f.size}`));
 
@@ -544,18 +750,15 @@
     renderFiles();
   });
 
-  // ====== WALIDACJA FORMULARZA
+  // ====== WALIDACJA
   form.addEventListener('submit', (e) => {
-    // Sprawdź czy dodano przynajmniej jeden plik
     if (attachments.length === 0) {
       e.preventDefault();
       e.stopPropagation();
 
-      // Pokaż komunikat błędu
       attachError.textContent = 'Musisz dodać przynajmniej jeden plik - Kartę lokalu z zaznaczonymi zmianami zgodnie z zasadami składania wniosku.';
       attachError.classList.add('font-bold');
 
-      // Przewiń do sekcji załączników
       document.getElementById('attachmentsInput').scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       return false;
@@ -564,7 +767,7 @@
 
   // ====== START
   add.addEventListener('click', () => addRow());
-  addRow();           // pierwszy pusty wiersz
-  renderFiles();      // lista załączników (pusta)
+  addRow();
+  renderFiles();
 </script>
 <%- include('partials/footer') %>

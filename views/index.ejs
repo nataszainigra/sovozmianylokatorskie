@@ -1,20 +1,74 @@
 <%- include('partials/header') %>
-<div class="max-w-3xl space-y-4">
-  <h1 class="text-2xl font-semibold">Procedura wprowadzenia zmian lokatorskich</h1>
-  <p class="text-zinc-600">Złóż wniosek, dołącz rysunki, a my przygotujemy analizę i wstępną wycenę na podstawie cennika.</p>
-  <div class="flex gap-3">
-    <a href="/wniosek" class="px-4 py-2 rounded-md bg-zinc-900 text-white">Nowy wniosek</a>
-    <a href="/cennik" class="px-4 py-2 rounded-md border">Zobacz cennik</a>
-    <a href="/dashboard" class="px-4 py-2 rounded-md border border-blue-600 text-blue-600 hover:bg-blue-50">Dashboard (Dział Techniczny)</a>
+<style>
+  .sovo-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  .sovo-btn-primary {
+    background: #7A0C2E;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s;
+    border: none;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .sovo-btn-primary:hover {
+    background: #5A0821;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(122, 12, 46, 0.2);
+  }
+  .sovo-btn-secondary {
+    background: white;
+    color: #7A0C2E;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    border: 2px solid #7A0C2E;
+    transition: all 0.2s;
+    display: inline-block;
+    text-decoration: none;
+  }
+  .sovo-btn-secondary:hover {
+    background: #FFF5F7;
+  }
+</style>
+
+<div class="max-w-4xl mx-auto space-y-6">
+  <div class="sovo-card">
+    <h1 class="text-3xl font-bold text-gray-800 mb-3">Procedura wprowadzenia zmian lokatorskich</h1>
+    <p class="text-gray-600 text-lg mb-6">Złóż wniosek, dołącz rysunki, a my przygotujemy analizę i wstępną wycenę na podstawie cennika.</p>
+
+    <div class="flex gap-4 flex-wrap">
+      <a href="/wniosek" class="sovo-btn-primary">Nowy wniosek</a>
+      <a href="/cennik" class="sovo-btn-secondary">Zobacz cennik</a>
+      <a href="/dashboard" class="sovo-btn-secondary">Dashboard (Dział Techniczny)</a>
+    </div>
   </div>
 
-  <div class="mt-8 p-4 border rounded-md bg-zinc-50">
-    <h2 class="font-medium mb-2">Wskazówki do rysunków</h2>
-    <ul class="list-disc pl-5 text-sm text-zinc-700 space-y-1">
-      <li>Usunięcie elementu – <span class="font-medium">czerwony</span></li>
-      <li>Dodanie elementu – <span class="font-medium">zielony</span></li>
-      <li>Przesunięcie / zmiana lokalizacji – <span class="font-medium">niebieski</span></li>
-      <li>Podaj odległości od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</li>
+  <div class="sovo-card bg-gray-50 border border-gray-200">
+    <h2 class="font-semibold text-lg text-gray-800 mb-4">Wskazówki do rysunków</h2>
+    <ul class="space-y-3 text-gray-700">
+      <li class="flex items-start">
+        <span class="inline-block w-3 h-3 rounded-full bg-red-500 mt-1.5 mr-3 flex-shrink-0"></span>
+        <span>Usunięcie elementu – <span class="font-semibold text-red-600">czerwony</span></span>
+      </li>
+      <li class="flex items-start">
+        <span class="inline-block w-3 h-3 rounded-full bg-green-500 mt-1.5 mr-3 flex-shrink-0"></span>
+        <span>Dodanie elementu – <span class="font-semibold text-green-600">zielony</span></span>
+      </li>
+      <li class="flex items-start">
+        <span class="inline-block w-3 h-3 rounded-full bg-blue-500 mt-1.5 mr-3 flex-shrink-0"></span>
+        <span>Przesunięcie / zmiana lokalizacji – <span class="font-semibold text-blue-600">niebieski</span></span>
+      </li>
+      <li class="flex items-start">
+        <span class="inline-block w-2 h-2 rounded-full bg-gray-400 mt-2 mr-3 flex-shrink-0"></span>
+        <span>Podaj odległości od narożnika najbliższej ściany oraz od posadzki do centralnego punktu instalacji.</span>
+      </li>
     </ul>
   </div>
 </div>
