@@ -27,10 +27,13 @@ export class DashboardController {
   @Get('/request/:id')
   @Render('dashboard/detail')
   async detail(@Param('id') id: string, @Query('sent') sent?: string) {
-    const request = await this.requestsSvc.getRequestById(id);
+    let request = await this.requestsSvc.getRequestById(id);
     if (!request) {
       return { title: 'Nie znaleziono', error: 'Wniosek nie istnieje' };
     }
+
+    // Mark client messages as read
+    request = await this.requestsSvc.markMessagesAsRead(id, 'technical_department');
 
     // Re-calculate estimate with current items
     const estimate = this.changesSvc.estimate(request.items);
@@ -85,14 +88,51 @@ export class DashboardController {
       return res.redirect('/dashboard');
     }
 
-    // Update status to 'zaakceptowany' when quote is sent
-    await this.requestsSvc.updateRequestStatus(id, 'zaakceptowany', 'Kosztorys wysłany do klienta');
+    // Generate client token if doesn't exist
+    let token = request.clientToken;
+    if (!token) {
+      token = await this.requestsSvc.generateClientToken(id);
+    }
 
-    // TODO: Send actual email with quote
-    // For now, just update status and redirect
-    // You can implement email sending here using nodemailer or similar
+    // Mark quote as sent and update status
+    await this.requestsSvc.markQuoteSent(id);
+
+    // Generate client link
+    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const clientLink = `${appUrl}/wniosek/szczegoly/${token}`;
+
+    // TODO: Send email with PDF quote and link
+    console.log('📧 Wysyłam kosztorys do klienta:', request.email);
+    console.log('🔗 Link dla klienta:', clientLink);
 
     res.redirect(`/dashboard/request/${id}?sent=true`);
+  }
+
+  @Post('/request/:id/message')
+  async sendMessage(
+    @Param('id') id: string,
+    @Body() body: { message: string },
+    @Res() res: Response,
+  ) {
+    if (!body.message || body.message.trim().length === 0) {
+      return res.status(400).json({ error: 'Wiadomość nie może być pusta' });
+    }
+
+    const updatedRequest = await this.requestsSvc.addMessage(
+      id,
+      'technical_department',
+      'Dział Techniczny',
+      body.message.trim(),
+    );
+
+    if (!updatedRequest) {
+      return res.status(404).json({ error: 'Nie znaleziono wniosku' });
+    }
+
+    // TODO: Send email notification to client
+    console.log('📧 Wysyłam notyfikację o nowej wiadomości do:', updatedRequest.email);
+
+    return res.json({ success: true, message: 'Wiadomość wysłana' });
   }
 
   @Post('/send-request-to-client')

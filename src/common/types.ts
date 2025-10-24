@@ -17,6 +17,7 @@ export interface ChangeItem {
   qty: number;
   unitPrice?: number;
   technicalAnalysis?: string;
+  comment?: string; // Komentarz dla klienta
 }
 
 export interface ChangeRequest {
@@ -31,7 +32,24 @@ export interface ChangeRequest {
   attachments?: string[];
 }
 
-export type RequestStatus = 'nowy' | 'w trakcie' | 'zaakceptowany' | 'odrzucony';
+export type RequestStatus =
+  | 'nowy'
+  | 'w trakcie'
+  | 'zaakceptowany'
+  | 'odrzucony'
+  | 'oczekuje na akceptację klienta'
+  | 'wymaga doprecyzowania';
+
+export type MessageAuthor = 'client' | 'technical_department';
+
+export interface Message {
+  id: string;
+  author: MessageAuthor;
+  authorName: string; // Imię osoby piszącej
+  content: string;
+  timestamp: string;
+  read: boolean; // Czy wiadomość została przeczytana
+}
 
 export interface SavedRequest extends ChangeRequest {
   id: string;
@@ -45,5 +63,9 @@ export interface SavedRequest extends ChangeRequest {
     manualCount: number;
   };
   notes?: string;
+  messages?: Message[]; // Wątek korespondencji
+  clientToken?: string; // Token do dostępu klienta bez logowania
+  quoteSentAt?: string; // Kiedy wysłano kosztorys do klienta
+  quoteAcceptedAt?: string; // Kiedy klient zaakceptował
 }
 

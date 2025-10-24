@@ -4,133 +4,442 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Figtree', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f9fafb;
+    }
+
+    .sovo-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .sovo-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .sovo-btn-primary {
+      background: #7A0C2E;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .sovo-btn-primary:hover {
+      background: #5A0821;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(122, 12, 46, 0.2);
+    }
+
+    .sovo-btn-secondary {
+      background: white;
+      color: #7A0C2E;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 2px solid #7A0C2E;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .sovo-btn-secondary:hover {
+      background: #fef2f2;
+      transform: translateY(-1px);
+    }
+
+    .sovo-btn-success {
+      background: #10b981;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sovo-btn-success:hover {
+      background: #059669;
+      transform: translateY(-1px);
+    }
+
+    .sovo-btn-gray {
+      background: #6b7280;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .sovo-btn-gray:hover {
+      background: #4b5563;
+    }
+
+    .sovo-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .sovo-input:focus {
+      outline: none;
+      border-color: #7A0C2E;
+      box-shadow: 0 0 0 3px rgba(122, 12, 46, 0.1);
+    }
+
+    .sovo-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .sovo-select:focus {
+      outline: none;
+      border-color: #7A0C2E;
+      box-shadow: 0 0 0 3px rgba(122, 12, 46, 0.1);
+    }
+
+    .sovo-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .sovo-table thead {
+      background: #f9fafb;
+    }
+
+    .sovo-table th {
+      padding: 0.75rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #6b7280;
+      border-bottom: 2px solid #e5e7eb;
+    }
+
+    .sovo-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #f3f4f6;
+      color: #374151;
+      font-size: 0.875rem;
+    }
+
+    .sovo-table tbody tr {
+      transition: background-color 0.2s;
+    }
+
+    .sovo-table tbody tr:hover {
+      background: #fef2f2;
+    }
+
+    .sovo-table tbody tr.manual-row {
+      background: #fff7ed;
+    }
+
+    .sovo-table tbody tr.manual-row:hover {
+      background: #ffedd5;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-badge.nowy { background: #dbeafe; color: #1e40af; }
+    .status-badge.w-trakcie { background: #fef3c7; color: #92400e; }
+    .status-badge.zaakceptowany { background: #d1fae5; color: #065f46; }
+    .status-badge.odrzucony { background: #fee2e2; color: #991b1b; }
+
+    .alert-success {
+      background: #d1fae5;
+      border: 2px solid #10b981;
+      color: #065f46;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .comment-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .comment-input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      min-height: 60px;
+      resize: vertical;
+    }
+
+    .comment-input:focus {
+      outline: none;
+      border-color: #7A0C2E;
+      box-shadow: 0 0 0 2px rgba(122, 12, 46, 0.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sovo-card {
+        padding: 1rem;
+      }
+
+      .sovo-table thead {
+        display: none;
+      }
+
+      .sovo-table,
+      .sovo-table tbody,
+      .sovo-table tr {
+        display: block;
+        width: 100%;
+      }
+
+      .sovo-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem;
+        background: white;
+      }
+
+      .sovo-table tr.manual-row {
+        background: #fff7ed;
+        border-color: #fb923c;
+      }
+
+      .sovo-table td {
+        display: block;
+        padding: 0.5rem 0;
+        border: none;
+        text-align: left !important;
+      }
+
+      .sovo-table td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.25rem;
+        color: #6b7280;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+
+      .sovo-table td:first-child {
+        padding-top: 0;
+      }
+
+      .modal-content {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-50">
+<body>
   <% if (typeof error !== 'undefined' && error) { %>
-    <div class="min-h-screen flex items-center justify-center">
-      <div class="bg-white p-8 rounded-lg shadow-lg">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="sovo-card max-w-md w-full text-center">
+        <svg class="w-16 h-16 mx-auto text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
         <h1 class="text-2xl font-bold text-red-600 mb-4"><%= error %></h1>
-        <a href="/dashboard" class="text-blue-600 hover:text-blue-800">← Powrót do dashboardu</a>
+        <a href="/dashboard" class="sovo-btn-primary">← Powrót do dashboardu</a>
       </div>
     </div>
   <% } else { %>
     <div class="min-h-screen pb-12">
       <!-- Header -->
-      <header class="bg-white shadow">
+      <header class="bg-white shadow-sm mb-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div class="flex justify-between items-center">
-            <div>
-              <h1 class="text-3xl font-bold text-gray-900">Wniosek <%= request.unitNumber %></h1>
-              <p class="text-sm text-gray-500 mt-1">ID: <%= request.id %></p>
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-4">
+              <img src="/sovo_logo.png" alt="SOVO Development" class="h-10 sm:h-12">
+              <div>
+                <h1 class="text-2xl sm:text-3xl font-bold" style="color: #7A0C2E;">Szczegóły Wniosku</h1>
+                <div class="flex items-center gap-3 mt-1">
+                  <p class="text-sm text-gray-600">Lokal <%= request.unitNumber %></p>
+                  <span class="status-badge <%= request.status.replace(' ', '-') %>"><%= request.status %></span>
+                </div>
+              </div>
             </div>
-            <a href="/dashboard" class="text-blue-600 hover:text-blue-800">← Powrót do listy</a>
+            <a href="/dashboard" class="text-sm font-medium" style="color: #7A0C2E;">← Powrót do listy</a>
           </div>
         </div>
       </header>
 
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Success Message after sending quote -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Success Message -->
         <% if (typeof sent !== 'undefined' && sent) { %>
-          <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6" role="alert">
-            <div class="flex items-center">
-              <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-              </svg>
+          <div class="alert-success">
+            <svg class="w-6 h-6 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
               <strong class="font-bold">Kosztorys wysłany!</strong>
-              <span class="block sm:inline ml-2">Finalny kosztorys został wysłany do klienta na adres <%= request.email %></span>
+              <p class="text-sm mt-1">Finalny kosztorys został wysłany do klienta na adres <%= request.email %></p>
             </div>
           </div>
         <% } %>
 
-        <!-- Status Update -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 class="text-xl font-bold mb-4">Status wniosku</h2>
-          <form action="/dashboard/request/<%= request.id %>/status" method="POST" class="flex gap-4 items-end">
-            <div class="flex-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Zmień status</label>
-              <select name="status" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                <option value="nowy" <%= request.status === 'nowy' ? 'selected' : '' %>>Nowy</option>
-                <option value="w trakcie" <%= request.status === 'w trakcie' ? 'selected' : '' %>>W trakcie</option>
-                <option value="zaakceptowany" <%= request.status === 'zaakceptowany' ? 'selected' : '' %>>Zaakceptowany</option>
-                <option value="odrzucony" <%= request.status === 'odrzucony' ? 'selected' : '' %>>Odrzucony</option>
-              </select>
+        <!-- Status & Notes -->
+        <div class="sovo-card">
+          <h2 class="text-xl font-bold mb-4" style="color: #7A0C2E;">Zarządzanie statusem</h2>
+          <form action="/dashboard/request/<%= request.id %>/status" method="POST" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Status wniosku</label>
+                <select name="status" class="sovo-select">
+                  <option value="nowy" <%= request.status === 'nowy' ? 'selected' : '' %>>Nowy</option>
+                  <option value="w trakcie" <%= request.status === 'w trakcie' ? 'selected' : '' %>>W trakcie</option>
+                  <option value="zaakceptowany" <%= request.status === 'zaakceptowany' ? 'selected' : '' %>>Zaakceptowany</option>
+                  <option value="odrzucony" <%= request.status === 'odrzucony' ? 'selected' : '' %>>Odrzucony</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Notatki wewnętrzne</label>
+                <input type="text" name="notes" value="<%= request.notes || '' %>" class="sovo-input" placeholder="Opcjonalne notatki...">
+              </div>
             </div>
-            <div class="flex-1">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Notatki</label>
-              <input type="text" name="notes" value="<%= request.notes || '' %>"
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                     placeholder="Opcjonalne notatki...">
+            <div class="flex justify-between items-center">
+              <% if (request.updatedAt) { %>
+                <p class="text-sm text-gray-500">Ostatnia aktualizacja: <%= new Date(request.updatedAt).toLocaleString('pl-PL') %></p>
+              <% } else { %>
+                <div></div>
+              <% } %>
+              <button type="submit" class="sovo-btn-primary">Zaktualizuj status</button>
             </div>
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-              Aktualizuj
-            </button>
           </form>
-          <% if (request.updatedAt) { %>
-            <p class="text-sm text-gray-500 mt-4">Ostatnia aktualizacja: <%= new Date(request.updatedAt).toLocaleString('pl-PL') %></p>
-          <% } %>
         </div>
 
         <!-- Client Info -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <h2 class="text-xl font-bold mb-4">Informacje o kliencie</h2>
-          <div class="grid grid-cols-2 gap-4">
+        <div class="sovo-card">
+          <h2 class="text-xl font-bold mb-4" style="color: #7A0C2E;">Informacje o kliencie</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <p class="text-sm text-gray-600">Nabywca</p>
-              <p class="font-medium"><%= request.buyerName %></p>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Nabywca</p>
+              <p class="font-medium text-gray-900"><%= request.buyerName %></p>
             </div>
             <div>
-              <p class="text-sm text-gray-600">Numer lokalu</p>
-              <p class="font-medium"><%= request.unitNumber %></p>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Numer lokalu</p>
+              <p class="font-medium text-gray-900"><%= request.unitNumber %></p>
             </div>
             <div>
-              <p class="text-sm text-gray-600">Email</p>
-              <p class="font-medium"><%= request.email %></p>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Email</p>
+              <p class="font-medium text-gray-900"><%= request.email %></p>
             </div>
             <div>
-              <p class="text-sm text-gray-600">Telefon</p>
-              <p class="font-medium"><%= request.phone || '-' %></p>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Telefon</p>
+              <p class="font-medium text-gray-900"><%= request.phone || '-' %></p>
             </div>
             <% if (request.addressStreet || request.addressZip || request.addressCity) { %>
-              <div class="col-span-2">
-                <p class="text-sm text-gray-600">Adres korespondencyjny</p>
-                <p class="font-medium">
+              <div class="sm:col-span-2">
+                <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Adres korespondencyjny</p>
+                <p class="font-medium text-gray-900">
                   <%= request.addressStreet || '' %><% if (request.addressZip || request.addressCity) { %>,<% } %>
                   <%= request.addressZip || '' %> <%= request.addressCity || '' %>
                 </p>
               </div>
             <% } %>
             <div>
-              <p class="text-sm text-gray-600">Data złożenia</p>
-              <p class="font-medium"><%= new Date(request.submittedAt).toLocaleString('pl-PL') %></p>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">Data złożenia</p>
+              <p class="font-medium text-gray-900"><%= new Date(request.submittedAt).toLocaleString('pl-PL') %></p>
+            </div>
+            <div>
+              <p class="text-xs font-semibold text-gray-500 uppercase mb-1">ID wniosku</p>
+              <p class="font-mono text-sm text-gray-600"><%= request.id %></p>
             </div>
           </div>
         </div>
 
         <!-- Attachments -->
         <% if (request.attachments && request.attachments.length > 0) { %>
-          <div class="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 class="text-xl font-bold mb-4">Załączniki (<%= request.attachments.length %>)</h2>
-            <ul class="space-y-2">
+          <div class="sovo-card">
+            <h2 class="text-xl font-bold mb-4" style="color: #7A0C2E;">Załączniki (<%= request.attachments.length %>)</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <% request.attachments.forEach(file => { %>
-                <li class="flex items-center gap-2 text-sm">
-                  <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <a href="/uploads/<%= file %>" target="_blank" class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg hover:border-burgundy hover:bg-gray-50 transition-all">
+                  <svg class="w-8 h-8 flex-shrink-0" style="color: #7A0C2E;" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clip-rule="evenodd" />
                   </svg>
-                  <a href="/uploads/<%= file %>" target="_blank" class="text-blue-600 hover:text-blue-800">
-                    <%= file %>
-                  </a>
-                </li>
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-sm text-gray-900 truncate"><%= file %></p>
+                    <p class="text-xs text-gray-500">Kliknij aby otworzyć</p>
+                  </div>
+                  <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                </a>
               <% }); %>
-            </ul>
+            </div>
           </div>
         <% } %>
 
         <!-- Items List with Editing -->
-        <div class="bg-white rounded-lg shadow p-6 mb-6">
-          <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold">Pozycje wniosku</h2>
-            <button onclick="toggleEditMode()" id="editBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        <div class="sovo-card">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+            <div>
+              <h2 class="text-xl font-bold" style="color: #7A0C2E;">Pozycje wniosku</h2>
+              <p class="text-sm text-gray-600 mt-1">Edytuj ceny jednostkowe i dodaj komentarze dla klienta</p>
+            </div>
+            <button onclick="toggleEditMode()" id="editBtn" class="sovo-btn-secondary">
               Edytuj wycenę
             </button>
           </div>
@@ -138,137 +447,243 @@
           <form id="itemsForm" action="/dashboard/request/<%= request.id %>/items" method="POST">
             <input type="hidden" name="items" id="itemsInput" value="">
 
-            <div class="overflow-x-auto">
-              <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pomieszczenie</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Branża</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kod</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tytuł</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ilość</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jedn.</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cena jedn.</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Razem</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Analiza techniczna</th>
-                  </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200" id="itemsTableBody">
-                  <% estimate.rows.forEach((item, idx) => { %>
-                    <tr class="<%= item.manual ? 'bg-orange-50' : '' %>">
-                      <td class="px-4 py-3 text-sm"><%= item.room %></td>
-                      <td class="px-4 py-3 text-sm"><%= item.branch %></td>
-                      <td class="px-4 py-3 text-sm font-mono"><%= item.code || '-' %></td>
-                      <td class="px-4 py-3 text-sm"><%= item.title || item.description %></td>
-                      <td class="px-4 py-3 text-sm"><%= item.qty %></td>
-                      <td class="px-4 py-3 text-sm"><%= item.unit %></td>
-                      <td class="px-4 py-3 text-sm">
-                        <span class="view-mode"><%= item.unitPrice ? item.unitPrice.toFixed(2) + ' PLN' : '-' %></span>
-                        <input type="number" step="0.01"
-                               class="edit-mode hidden w-24 px-2 py-1 border border-gray-300 rounded"
-                               data-idx="<%= idx %>"
-                               data-field="unitPrice"
-                               value="<%= item.unitPrice || 0 %>">
-                      </td>
-                      <td class="px-4 py-3 text-sm font-medium">
-                        <% if (item.manual) { %>
-                          <span class="text-orange-600">Do analizy</span>
-                        <% } else { %>
-                          <%= item.lineTotal.toFixed(2) %> PLN
-                        <% } %>
-                      </td>
-                      <td class="px-4 py-3 text-sm">
-                        <% if (item.manual) { %>
-                          <span class="view-mode text-gray-500"><%= item.technicalAnalysis || 'Brak analizy' %></span>
-                          <textarea class="edit-mode hidden w-full px-2 py-1 border border-gray-300 rounded"
+            <div class="overflow-x-auto -mx-6 sm:mx-0">
+              <div class="inline-block min-w-full align-middle">
+                <table class="sovo-table">
+                  <thead>
+                    <tr>
+                      <th>Pomieszczenie</th>
+                      <th>Branża</th>
+                      <th>Kod</th>
+                      <th>Opis</th>
+                      <th>Ilość</th>
+                      <th>Jedn.</th>
+                      <th>Cena jedn.</th>
+                      <th>Wartość</th>
+                      <th>Komentarz dla klienta</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% estimate.rows.forEach((item, idx) => { %>
+                      <tr class="<%= item.manual ? 'manual-row' : '' %>">
+                        <td data-label="Pomieszczenie">
+                          <span class="font-medium"><%= item.room %></span>
+                        </td>
+                        <td data-label="Branża">
+                          <%= item.branch %>
+                        </td>
+                        <td data-label="Kod">
+                          <span class="font-mono text-xs"><%= item.code || '-' %></span>
+                        </td>
+                        <td data-label="Opis">
+                          <span class="text-sm"><%= item.title || item.description %></span>
+                        </td>
+                        <td data-label="Ilość">
+                          <%= item.qty %>
+                        </td>
+                        <td data-label="Jednostka">
+                          <%= item.unit %>
+                        </td>
+                        <td data-label="Cena jednostkowa">
+                          <span class="view-mode font-medium"><%= item.unitPrice ? item.unitPrice.toFixed(2) + ' PLN' : '-' %></span>
+                          <input type="number" step="0.01" min="0"
+                                 class="edit-mode hidden sovo-input"
+                                 style="max-width: 120px;"
+                                 data-idx="<%= idx %>"
+                                 data-field="unitPrice"
+                                 value="<%= item.unitPrice || 0 %>">
+                        </td>
+                        <td data-label="Wartość">
+                          <% if (item.manual && !item.unitPrice) { %>
+                            <span class="text-orange-600 font-semibold text-xs">Do analizy DT</span>
+                          <% } else { %>
+                            <span class="font-bold" style="color: #7A0C2E;"><%= item.lineTotal.toFixed(2) %> PLN</span>
+                          <% } %>
+                        </td>
+                        <td data-label="Komentarz dla klienta">
+                          <div class="view-mode">
+                            <% if (item.comment) { %>
+                              <div class="comment-box">
+                                <p class="text-sm text-gray-700"><%= item.comment %></p>
+                              </div>
+                            <% } else { %>
+                              <span class="text-gray-400 text-sm">Brak komentarza</span>
+                            <% } %>
+                          </div>
+                          <textarea class="edit-mode hidden comment-input"
                                     rows="2"
                                     data-idx="<%= idx %>"
-                                    data-field="technicalAnalysis"
-                                    placeholder="Wpisz analizę techniczną..."><%= item.technicalAnalysis || '' %></textarea>
-                        <% } else { %>
-                          <span class="text-gray-400">-</span>
-                        <% } %>
-                      </td>
-                    </tr>
-                  <% }); %>
-                </tbody>
-              </table>
+                                    data-field="comment"
+                                    placeholder="Opcjonalny komentarz dla klienta..."><%= item.comment || '' %></textarea>
+                        </td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
+            <!-- Summary -->
             <div class="mt-6 flex justify-end">
-              <div class="space-y-2 text-right">
+              <div class="space-y-2 text-right bg-gray-50 p-4 rounded-lg">
                 <p class="text-lg">
                   <span class="text-gray-600">Netto:</span>
-                  <span class="font-bold"><%= estimate.subtotal.toFixed(2) %> PLN</span>
+                  <span class="font-bold ml-4"><%= estimate.subtotal.toFixed(2) %> PLN</span>
                 </p>
                 <p class="text-lg">
                   <span class="text-gray-600">VAT (23%):</span>
-                  <span class="font-bold"><%= estimate.vat.toFixed(2) %> PLN</span>
+                  <span class="font-bold ml-4"><%= estimate.vat.toFixed(2) %> PLN</span>
                 </p>
-                <p class="text-2xl border-t-2 pt-2">
+                <p class="text-2xl border-t-2 border-gray-300 pt-2">
                   <span class="text-gray-600">Brutto:</span>
-                  <span class="font-bold text-blue-600"><%= estimate.total.toFixed(2) %> PLN</span>
+                  <span class="font-bold ml-4" style="color: #7A0C2E;"><%= estimate.total.toFixed(2) %> PLN</span>
                 </p>
                 <% if (estimate.manualCount > 0) { %>
-                  <p class="text-sm text-orange-600">
+                  <p class="text-sm text-orange-600 flex items-center justify-end gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
                     Pozycji wymagających analizy: <%= estimate.manualCount %>
                   </p>
                 <% } %>
               </div>
             </div>
 
-            <div class="mt-4 hidden" id="saveSection">
-              <button type="submit" class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-bold">
-                Zapisz zmiany
+            <!-- Save Button -->
+            <div class="mt-6 hidden" id="saveSection">
+              <button type="submit" class="w-full sovo-btn-success text-lg py-3">
+                💾 Zapisz zmiany wyceny
               </button>
             </div>
           </form>
 
-          <!-- Send Quote Section (shown after successful save) -->
+          <!-- Send Quote Section -->
           <% if (typeof showSendButton !== 'undefined' && showSendButton && estimate.manualCount === 0) { %>
-            <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p class="text-sm text-green-800 mb-3">
-                ✓ Wycena zaktualizowana pomyślnie. Wszystkie pozycje zostały wycenione.
-              </p>
-              <button onclick="showSendConfirmation()" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-bold">
-                Zaakceptuj wycenę i Wyślij finalny Kosztorys do klienta
+            <div class="mt-6 p-4 border-2 rounded-lg" style="background: #d1fae5; border-color: #10b981;">
+              <div class="flex items-start gap-3 mb-3">
+                <svg class="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div class="flex-1">
+                  <p class="font-semibold text-green-800">Wycena gotowa do wysłania</p>
+                  <p class="text-sm text-green-700 mt-1">Wszystkie pozycje zostały wycenione. Możesz teraz wysłać finalny kosztorys do klienta.</p>
+                </div>
+              </div>
+              <button onclick="showSendConfirmation()" class="w-full sovo-btn-primary text-lg py-3">
+                ✉️ Zaakceptuj wycenę i Wyślij finalny Kosztorys do klienta
               </button>
             </div>
           <% } %>
         </div>
 
-        <!-- Confirmation Modal -->
-        <div id="confirmModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-            <div class="mt-3 text-center">
-              <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100">
-                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+        <!-- Correspondence Section -->
+        <div class="sovo-card">
+          <h2 class="text-xl font-bold mb-4" style="color: #7A0C2E;">Korespondencja z klientem</h2>
+
+          <!-- Messages Thread -->
+          <div class="space-y-4 mb-6" id="messagesThread">
+            <% if (request.messages && request.messages.length > 0) { %>
+              <% request.messages.forEach(msg => { %>
+                <div class="<%= msg.author === 'technical_department' ? 'flex justify-end' : 'flex justify-start' %>">
+                  <div class="max-w-[80%] <%= msg.author === 'technical_department' ? 'bg-burgundy text-white' : 'bg-gray-100 text-gray-900' %> rounded-lg p-4" style="<%= msg.author === 'technical_department' ? 'background: #7A0C2E;' : '' %>">
+                    <div class="flex items-center gap-2 mb-2">
+                      <svg class="w-5 h-5 <%= msg.author === 'technical_department' ? 'text-white' : 'text-gray-600' %>" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span class="font-semibold text-sm"><%= msg.authorName %></span>
+                      <% if (!msg.read && msg.author === 'client') { %>
+                        <span class="text-xs px-2 py-0.5 bg-red-500 text-white rounded-full">Nowa</span>
+                      <% } %>
+                    </div>
+                    <p class="text-sm leading-relaxed whitespace-pre-wrap"><%= msg.content %></p>
+                    <p class="text-xs mt-2 <%= msg.author === 'technical_department' ? 'text-gray-200' : 'text-gray-500' %>">
+                      <%= new Date(msg.timestamp).toLocaleString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                    </p>
+                  </div>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <div class="text-center py-8 text-gray-500">
+                <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                 </svg>
+                <p class="font-medium text-gray-600">Brak wiadomości</p>
+                <p class="text-sm text-gray-500 mt-1">Wyślij pierwszą wiadomość do klienta</p>
               </div>
-              <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Potwierdź wysyłkę</h3>
-              <div class="mt-2 px-7 py-3">
-                <p class="text-sm text-gray-500">
-                  Czy na pewno chcesz wysłać finalny kosztorys do klienta na adres:<br>
-                  <strong class="text-gray-900"><%= request.email %></strong>?
-                </p>
-                <p class="text-sm text-gray-500 mt-2">
-                  Wartość brutto: <strong class="text-blue-600"><%= estimate.total.toFixed(2) %> PLN</strong>
-                </p>
+            <% } %>
+          </div>
+
+          <!-- New Message Form -->
+          <div class="border-t pt-4">
+            <form id="messageForm" class="space-y-3">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Nowa wiadomość do klienta</label>
+                <textarea
+                  id="messageInput"
+                  class="comment-input"
+                  rows="4"
+                  placeholder="Wpisz wiadomość dla klienta..."
+                  required
+                ></textarea>
               </div>
-              <div class="items-center px-4 py-3">
-                <form action="/dashboard/request/<%= request.id %>/send-quote" method="POST" class="space-y-2">
-                  <button type="submit" class="w-full px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                    Potwierdź wysyłkę
-                  </button>
-                  <button type="button" onclick="hideSendConfirmation()" class="w-full px-4 py-2 bg-gray-300 text-gray-700 text-base font-medium rounded-md shadow-sm hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300">
-                    Anuluj
-                  </button>
-                </form>
+              <div class="flex justify-between items-center">
+                <p class="text-xs text-gray-500">Klient otrzyma powiadomienie email o nowej wiadomości</p>
+                <button type="submit" class="sovo-btn-primary">
+                  Wyślij wiadomość
+                </button>
               </div>
+            </form>
+            <div id="messageSuccess" class="hidden mt-3 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm">
+              ✅ Wiadomość została wysłana do klienta
+            </div>
+            <div id="messageError" class="hidden mt-3 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+              ❌ Wystąpił błąd podczas wysyłania wiadomości
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="hidden modal-overlay">
+      <div class="modal-content">
+        <div class="text-center mb-4">
+          <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full mb-4" style="background: #fef2f2;">
+            <svg class="h-8 w-8" style="color: #7A0C2E;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">Potwierdź wysyłkę kosztorysu</h3>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg mb-6">
+          <p class="text-sm text-gray-700 mb-3">
+            Czy na pewno chcesz wysłać finalny kosztorys do klienta?
+          </p>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Klient:</span>
+              <strong class="text-gray-900"><%= request.buyerName %></strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Email:</span>
+              <strong class="text-gray-900"><%= request.email %></strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Wartość brutto:</span>
+              <strong style="color: #7A0C2E;"><%= estimate.total.toFixed(2) %> PLN</strong>
+            </div>
+          </div>
+        </div>
+
+        <form action="/dashboard/request/<%= request.id %>/send-quote" method="POST" class="space-y-3">
+          <button type="submit" class="w-full sovo-btn-primary text-base py-3">
+            Potwierdź wysyłkę
+          </button>
+          <button type="button" onclick="hideSendConfirmation()" class="w-full sovo-btn-secondary text-base py-3">
+            Anuluj
+          </button>
+        </form>
       </div>
     </div>
 
@@ -295,16 +710,16 @@
           viewElements.forEach(el => el.classList.add('hidden'));
           editElements.forEach(el => el.classList.remove('hidden'));
           saveSection.classList.remove('hidden');
-          editBtn.textContent = 'Anuluj';
-          editBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-          editBtn.classList.add('bg-gray-600', 'hover:bg-gray-700');
+          editBtn.textContent = 'Anuluj edycję';
+          editBtn.classList.remove('sovo-btn-secondary');
+          editBtn.classList.add('sovo-btn-gray');
         } else {
           viewElements.forEach(el => el.classList.remove('hidden'));
           editElements.forEach(el => el.classList.add('hidden'));
           saveSection.classList.add('hidden');
           editBtn.textContent = 'Edytuj wycenę';
-          editBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
-          editBtn.classList.remove('bg-gray-600', 'hover:bg-gray-700');
+          editBtn.classList.add('sovo-btn-secondary');
+          editBtn.classList.remove('sovo-btn-gray');
         }
       }
 
@@ -319,12 +734,61 @@
           if (field === 'unitPrice') {
             const value = parseFloat(input.value) || 0;
             updatedItems[idx][field] = value;
-          } else if (field === 'technicalAnalysis') {
-            updatedItems[idx][field] = input.value;
+          } else if (field === 'comment') {
+            updatedItems[idx][field] = input.value.trim();
           }
         });
 
         document.getElementById('itemsInput').value = JSON.stringify(updatedItems);
+      });
+
+      // Message form handling
+      const messageForm = document.getElementById('messageForm');
+      const messageInput = document.getElementById('messageInput');
+      const messageSuccess = document.getElementById('messageSuccess');
+      const messageError = document.getElementById('messageError');
+
+      messageForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const message = messageInput.value.trim();
+        if (!message) {
+          return;
+        }
+
+        // Hide previous alerts
+        messageSuccess.classList.add('hidden');
+        messageError.classList.add('hidden');
+
+        try {
+          const response = await fetch('/dashboard/request/<%= request.id %>/message', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message }),
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            // Show success message
+            messageSuccess.classList.remove('hidden');
+
+            // Clear input
+            messageInput.value = '';
+
+            // Reload page after 1.5s to show new message
+            setTimeout(() => {
+              window.location.reload();
+            }, 1500);
+          } else {
+            messageError.classList.remove('hidden');
+          }
+        } catch (error) {
+          console.error('Error sending message:', error);
+          messageError.classList.remove('hidden');
+        }
       });
     </script>
   <% } %>

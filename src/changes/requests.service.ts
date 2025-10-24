@@ -48,6 +48,7 @@ export class RequestsService {
         qty: item.qty,
         unit_price: item.unitPrice || null,
         technical_analysis: item.technicalAnalysis || null,
+        comment: item.comment || null,
       }));
 
       const { error: itemsError } = await client
@@ -140,6 +141,7 @@ export class RequestsService {
         qty: item.qty,
         unit_price: item.unitPrice || null,
         technical_analysis: item.technicalAnalysis || null,
+        comment: item.comment || null,
       }));
 
       await client
@@ -170,11 +172,21 @@ export class RequestsService {
 
     const { data: requests, error } = await client
       .from('change_requests')
-      .select('status');
+      .select('status, messages');
 
     if (error) {
       throw new Error(`Failed to get stats: ${error.message}`);
     }
+
+    // Count unread client messages
+    let unreadMessages = 0;
+    requests.forEach((r: any) => {
+      if (r.messages && Array.isArray(r.messages)) {
+        unreadMessages += r.messages.filter((msg: any) =>
+          msg.author === 'client' && !msg.read
+        ).length;
+      }
+    });
 
     return {
       total: requests.length,
@@ -182,6 +194,9 @@ export class RequestsService {
       wTrakcie: requests.filter((r: any) => r.status === 'w trakcie').length,
       zaakceptowany: requests.filter((r: any) => r.status === 'zaakceptowany').length,
       odrzucony: requests.filter((r: any) => r.status === 'odrzucony').length,
+      oczekujeNaAkceptacje: requests.filter((r: any) => r.status === 'oczekuje na akceptację klienta').length,
+      wymagaDoprecyzowania: requests.filter((r: any) => r.status === 'wymaga doprecyzowania').length,
+      unreadMessages,
     };
   }
 
@@ -216,6 +231,7 @@ export class RequestsService {
       qty: item.qty,
       unitPrice: item.unit_price ? parseFloat(item.unit_price) : undefined,
       technicalAnalysis: item.technical_analysis || undefined,
+      comment: item.comment || undefined,
     }));
 
     return {
@@ -233,7 +249,144 @@ export class RequestsService {
       estimatedCost: dbRequest.estimated_cost,
       attachments: dbRequest.attachments || [],
       notes: dbRequest.notes,
+      messages: dbRequest.messages || [],
+      clientToken: dbRequest.client_token,
+      quoteSentAt: dbRequest.quote_sent_at,
+      quoteAcceptedAt: dbRequest.quote_accepted_at,
       items,
     };
+  }
+
+  // Message management methods
+  async addMessage(
+    requestId: string,
+    author: 'client' | 'technical_department',
+    authorName: string,
+    content: string,
+  ): Promise<SavedRequest | null> {
+    const client = this.supabase.getClient();
+
+    // Get current request
+    const request = await this.getRequestById(requestId);
+    if (!request) {
+      return null;
+    }
+
+    const messageId = Date.now().toString() + '-' + Math.random().toString(36).substring(2, 11);
+    const newMessage = {
+      id: messageId,
+      author,
+      authorName,
+      content,
+      timestamp: new Date().toISOString(),
+      read: false,
+    };
+
+    const updatedMessages = [...(request.messages || []), newMessage];
+
+    // Update request with new message
+    const { data, error } = await client
+      .from('change_requests')
+      .update({
+        messages: updatedMessages,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', requestId)
+      .select('*, change_items(*)')
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return this.mapDbToSavedRequest(data);
+  }
+
+  async markMessagesAsRead(requestId: string, author: 'client' | 'technical_department'): Promise<SavedRequest | null> {
+    const client = this.supabase.getClient();
+
+    const request = await this.getRequestById(requestId);
+    if (!request || !request.messages) {
+      return request;
+    }
+
+    // Mark messages from opposite author as read
+    const updatedMessages = request.messages.map(msg => {
+      if (msg.author !== author && !msg.read) {
+        return { ...msg, read: true };
+      }
+      return msg;
+    });
+
+    const { data, error } = await client
+      .from('change_requests')
+      .update({
+        messages: updatedMessages,
+      })
+      .eq('id', requestId)
+      .select('*, change_items(*)')
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return this.mapDbToSavedRequest(data);
+  }
+
+  async generateClientToken(requestId: string): Promise<string | null> {
+    const client = this.supabase.getClient();
+
+    const token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+    const { error } = await client
+      .from('change_requests')
+      .update({
+        client_token: token,
+      })
+      .eq('id', requestId);
+
+    if (error) {
+      return null;
+    }
+
+    return token;
+  }
+
+  async getRequestByToken(token: string): Promise<SavedRequest | null> {
+    const client = this.supabase.getClient();
+
+    const { data: request, error } = await client
+      .from('change_requests')
+      .select('*, change_items(*)')
+      .eq('client_token', token)
+      .single();
+
+    if (error || !request) {
+      return null;
+    }
+
+    return this.mapDbToSavedRequest(request);
+  }
+
+  async markQuoteSent(requestId: string): Promise<SavedRequest | null> {
+    const client = this.supabase.getClient();
+
+    const { data, error } = await client
+      .from('change_requests')
+      .update({
+        quote_sent_at: new Date().toISOString(),
+        status: 'oczekuje na akceptację klienta',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', requestId)
+      .select('*, change_items(*)')
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    return this.mapDbToSavedRequest(data);
   }
 }

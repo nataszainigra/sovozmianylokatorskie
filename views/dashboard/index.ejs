@@ -495,6 +495,17 @@
                   <td data-label="Akcje">
                     <a href="/dashboard/request/<%= req.id %>" class="inline-flex items-center gap-1 font-semibold text-sm" style="color: #7A0C2E;">
                       Szczegóły
+                      <%
+                        let unreadCount = 0;
+                        if (req.messages && Array.isArray(req.messages)) {
+                          unreadCount = req.messages.filter(msg => msg.author === 'client' && !msg.read).length;
+                        }
+                      %>
+                      <% if (unreadCount > 0) { %>
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-red-500 text-white text-xs font-bold">
+                          <%= unreadCount %>
+                        </span>
+                      <% } %>
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                       </svg>
