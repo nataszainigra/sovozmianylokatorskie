@@ -33,7 +33,11 @@ export class DashboardController {
     }
 
     // Mark client messages as read
-    request = await this.requestsSvc.markMessagesAsRead(id, 'technical_department');
+    const updatedRequest = await this.requestsSvc.markMessagesAsRead(id, 'technical_department');
+    if (!updatedRequest) {
+      return { title: 'Nie znaleziono', error: 'Wniosek nie istnieje' };
+    }
+    request = updatedRequest;
 
     // Re-calculate estimate with current items
     const estimate = this.changesSvc.estimate(request.items);
@@ -89,9 +93,14 @@ export class DashboardController {
     }
 
     // Generate client token if doesn't exist
-    let token = request.clientToken;
+    let token: string | null | undefined = request.clientToken;
     if (!token) {
       token = await this.requestsSvc.generateClientToken(id);
+    }
+
+    if (!token) {
+      console.error('Failed to generate client token');
+      return res.redirect('/dashboard');
     }
 
     // Mark quote as sent and update status
